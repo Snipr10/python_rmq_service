@@ -1,3 +1,6 @@
+import json
+
+import pika
 
 if __name__ == "__main__":
     parameters = pika.URLParameters("amqp://crawlers:rAt5HbgN9odP@192.168.5.46:5672/crawlers")
