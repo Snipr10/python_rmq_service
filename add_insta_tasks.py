@@ -40,6 +40,7 @@ if __name__ == "__main__":
         print('Messages in queue %d' % res.method.message_count)
         # TODO
         if res.method.message_count < 10:
+            print(123)
             select_sources = Sources.objects.filter(
                 Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                 status=1)
@@ -50,6 +51,7 @@ if __name__ == "__main__":
                 source_id__in=list(select_sources.values_list('id', flat=True))
                                                         ).order_by('last_modified')
             for sources_item in sources_items:
+                print(sources_item)
                 time_s = select_sources.get(id=sources_item.source_id).sources
                 if time_s is None:
                     time_s = 0
