@@ -46,11 +46,13 @@ if __name__ == "__main__":
                 status=1)
             print(select_sources)
             sources_items = SourcesItems.objects.filter(
-                network_id=11,
+                network_id=3,
                 disabled=0,
                 taken=0,
                 source_id__in=list(select_sources.values_list('id', flat=True))
                                                         ).order_by('last_modified')
+            print(sources_items)
+
             for sources_item in sources_items:
                 print(sources_item)
                 time_s = select_sources.get(id=sources_item.source_id).sources
