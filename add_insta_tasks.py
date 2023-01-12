@@ -45,7 +45,7 @@ if __name__ == "__main__":
                 Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                 status=1)
             sources_items = SourcesItems.objects.filter(
-                network_id=10,
+                network_id=11,
                 disabled=0,
                 taken=0,
                 source_id__in=list(select_sources.values_list('id', flat=True))
