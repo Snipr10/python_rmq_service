@@ -44,6 +44,7 @@ if __name__ == "__main__":
             select_sources = Sources.objects.filter(
                 Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                 status=1)
+            print(select_sources)
             sources_items = SourcesItems.objects.filter(
                 network_id=11,
                 disabled=0,
