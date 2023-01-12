@@ -3,7 +3,6 @@ import json
 import os
 import datetime
 
-from core.models import Sources, SourcesItems
 from utils import get_chanel, update_time_timezone
 from django.db.models import Q
 from django.utils import timezone
@@ -25,6 +24,7 @@ if __name__ == "__main__":
     import pymysql
 
     pymysql.install_as_MySQLdb()
+    from core.models import Sources, SourcesItems
 
     channel = get_chanel()
     res = channel.queue_declare(
