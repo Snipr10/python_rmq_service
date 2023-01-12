@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 if __name__ == "__main__":
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ok_parser.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
