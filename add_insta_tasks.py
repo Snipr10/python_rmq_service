@@ -63,6 +63,7 @@ if __name__ == "__main__":
                 if sources_item.last_modified is None or (
                         sources_item.last_modified + datetime.timedelta(minutes=time_s) <
                         update_time_timezone(timezone.localtime())):
+                    print(model_to_dict(sources_item))
                     channel.basic_publish(exchange='',
                                           routing_key='insta_source_parse',
                                           body=model_to_dict(sources_item))
