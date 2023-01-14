@@ -22,9 +22,11 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"callback{e}")
 
-    channel.basic_consume(queue='insta_source_parse_result', on_message_callback=callback, auto_ack=True)
-    res = channel.queue_declare(
+
+    channel.queue_declare(
         queue='insta_source_parse_result',
     )
+    channel.basic_consume(queue='insta_source_parse_result', on_message_callback=callback, auto_ack=True)
+
     channel.start_consuming()
 
