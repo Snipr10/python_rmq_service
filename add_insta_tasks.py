@@ -47,7 +47,7 @@ if __name__ == "__main__":
                 taken=0,
                 source_id__in=list(select_sources.values_list('id', flat=True))
             ).order_by('last_modified')
-            if len(sources_item) == 0:
+            if len(sources_items) == 0:
                 time.sleep(5 * 60)
                 continue
             source_ids = []
