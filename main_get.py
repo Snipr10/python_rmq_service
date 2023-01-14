@@ -15,6 +15,6 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"callback{e}")
 
-    channel.basic_consume(queue='insta_test', on_message_callback=callback, auto_ack=True)
+    channel.basic_consume(queue='insta_source_parse', on_message_callback=callback, auto_ack=True)
     channel.start_consuming()
 

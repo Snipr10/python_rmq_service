@@ -25,10 +25,11 @@ if __name__ == "__main__":
 
     pymysql.install_as_MySQLdb()
     from core.models import Sources, SourcesItems
+    from django.forms.models import model_to_dict
 
     channel = get_chanel()
     res = channel.queue_declare(
-        queue='insta_test',
+        queue='insta_source_parse',
         durable=True,
         exclusive=False,
         auto_delete=False,
@@ -44,13 +45,14 @@ if __name__ == "__main__":
                 Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                 status=1)
             sources_items = SourcesItems.objects.filter(
-                network_id=3,
+                network_id=7,
                 disabled=0,
                 taken=0,
                 source_id__in=list(select_sources.values_list('id', flat=True))
-                                                        ).order_by('last_modified')
+            ).order_by('last_modified')
 
-            for sources_item in sources_items:
+            source_ids = []
+            for sources_item in sources_items[:100]:
                 print(sources_item)
                 time_s = select_sources.get(id=sources_item.source_id).sources
                 if time_s is None:
@@ -60,7 +62,9 @@ if __name__ == "__main__":
                         sources_item.last_modified + datetime.timedelta(minutes=time_s) <
                         update_time_timezone(timezone.localtime())):
                     channel.basic_publish(exchange='',
-                                          routing_key='insta_test',
-                                          body=json.dumps({
-                                              "text": sources_item.id,
-                                          }))
+                                          routing_key='insta_source_parse',
+                                          body=model_to_dict(sources_item))
+                sources_item.taken = 1
+                source_ids.append(sources_item)
+            SourcesItems.objects.bulk_update(source_ids, ['taken'],
+                                             batch_size=200)
