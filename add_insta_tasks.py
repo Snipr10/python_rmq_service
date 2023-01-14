@@ -2,6 +2,7 @@ import json
 
 import os
 import datetime
+import time
 
 from django.db.models import Q
 from django.utils import timezone
@@ -30,11 +31,10 @@ if __name__ == "__main__":
 
     channel = get_chanel()
 
-    res = channel.queue_declare(
-        queue='insta_source_parse',
-    )
     while True:
-
+        res = channel.queue_declare(
+            queue='insta_source_parse',
+        )
         print('Messages in queue %d' % res.method.message_count)
         # TODO
         if res.method.message_count < 10:
@@ -47,7 +47,9 @@ if __name__ == "__main__":
                 taken=0,
                 source_id__in=list(select_sources.values_list('id', flat=True))
             ).order_by('last_modified')
-
+            if len(sources_item) == 0:
+                time.sleep(5 * 60)
+                continue
             source_ids = []
             for sources_item in sources_items[:100]:
                 print(sources_item)
@@ -68,3 +70,4 @@ if __name__ == "__main__":
                 source_ids.append(sources_item)
             SourcesItems.objects.bulk_update(source_ids, ['taken'],
                                              batch_size=200)
+            time.sleep(60)
