@@ -28,6 +28,8 @@ if __name__ == "__main__":
     from django.forms.models import model_to_dict
 
     channel = get_chanel()
+    channel.queue_declare(queue='insta_source_parse')
+
     res = channel.queue_declare(
         queue='insta_source_parse',
         durable=True,
