@@ -68,7 +68,7 @@ if __name__ == "__main__":
                     body['last_modified'] = body['last_modified'].isoformat()
                     channel.basic_publish(exchange='',
                                           routing_key='insta_source_parse',
-                                          body=json.dumps(model_to_dict(sources_item)))
+                                          body=json.dumps(body))
                 sources_item.taken = 1
                 source_ids.append(sources_item)
             SourcesItems.objects.bulk_update(source_ids, ['taken'],
