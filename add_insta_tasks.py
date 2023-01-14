@@ -28,16 +28,13 @@ if __name__ == "__main__":
     from core.models import Sources, SourcesItems
     from django.forms.models import model_to_dict
 
+    channel = get_chanel()
 
+    res = channel.queue_declare(
+        queue='insta_source_parse',
+    )
     while True:
-        channel = get_chanel()
 
-        channel.queue_declare(queue='insta_source_parse')
-
-        res = channel.queue_declare(
-            queue='insta_source_parse',
-
-        )
         print('Messages in queue %d' % res.method.message_count)
         # TODO
         if res.method.message_count < 10:
