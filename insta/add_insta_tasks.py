@@ -38,7 +38,7 @@ if __name__ == "__main__":
         passive=True
     )
     while True:
-        channel.queue_declare(queue='insta_test')
+        channel.queue_declare(queue='insta_source_parse')
 
         print('Messages in queue %d' % res.method.message_count)
         # TODO
