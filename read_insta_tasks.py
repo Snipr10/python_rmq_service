@@ -34,7 +34,7 @@ if __name__ == "__main__":
             result.append(
                 SourcesItems(
                     id=body.get("id"),
-                    last_modified=datetime.datetime.isoformat(body.get("last_modified")),
+                    last_modified=datetime.datetime.fromisoformat(body.get("last_modified")),
                     taken=0
                 )
             )
