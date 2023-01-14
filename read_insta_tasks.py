@@ -33,8 +33,8 @@ if __name__ == "__main__":
             print(body)
             result.append(
                 SourcesItems(
-                    id=body.gety("id"),
-                    last_modified=datetime.datetime.isoformat(body.gety("last_modified")),
+                    id=body.get("id"),
+                    last_modified=datetime.datetime.isoformat(body.get("last_modified")),
                     taken=0
                 )
             )
