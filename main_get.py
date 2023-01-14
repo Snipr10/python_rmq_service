@@ -15,10 +15,11 @@ if __name__ == "__main__":
                 "id":body.get("id"),
                 "last_modified": '2023-01-01 01:01:01.000'
                    }
+            print(body)
+
             channel.basic_publish(exchange='',
                                   routing_key='insta_source_parse_result',
                                   body=json.dumps(res))
-            print(body)
         except Exception as e:
             print(f"callback{e}")
 
