@@ -66,7 +66,7 @@ if __name__ == "__main__":
                     print(model_to_dict(sources_item))
                     channel.basic_publish(exchange='',
                                           routing_key='insta_source_parse',
-                                          body=model_to_dict(sources_item))
+                                          body=json.dumps(model_to_dict(sources_item)))
                 sources_item.taken = 1
                 source_ids.append(sources_item)
             SourcesItems.objects.bulk_update(source_ids, ['taken'],
