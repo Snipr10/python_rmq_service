@@ -3,9 +3,7 @@ import json
 import os
 import datetime
 
-from utils import get_chanel, update_time_timezone
-from django.db.models import Q
-from django.utils import timezone
+from core.utils import get_chanel
 
 if __name__ == "__main__":
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
@@ -24,8 +22,7 @@ if __name__ == "__main__":
     import pymysql
 
     pymysql.install_as_MySQLdb()
-    from core.models import Sources, SourcesItems
-    from django.forms.models import model_to_dict
+    from core.models import SourcesItems
 
     channel = get_chanel()
     result = []

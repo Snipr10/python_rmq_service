@@ -3,9 +3,10 @@ import json
 import os
 import datetime
 
-from utils import get_chanel, update_time_timezone
 from django.db.models import Q
 from django.utils import timezone
+
+from core.utils import get_chanel, update_time_timezone
 
 if __name__ == "__main__":
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
