@@ -64,6 +64,8 @@ if __name__ == "__main__":
                         sources_item.last_modified + datetime.timedelta(minutes=time_s) <
                         update_time_timezone(timezone.localtime())):
                     print(model_to_dict(sources_item))
+                    body = model_to_dict(sources_item)
+                    body['last_modified'] = body['last_modified'].isoformat()
                     channel.basic_publish(exchange='',
                                           routing_key='insta_source_parse',
                                           body=json.dumps(model_to_dict(sources_item)))
