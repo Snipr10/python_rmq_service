@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # channel.queue_declare(
     #     queue='insta_source_parse_result',
     # )
-    channel.basic_consume(queue='insta_source_parse_result', on_message_callback=callback, auto_ack=True)
+    channel.basic_consume(queue='insta_source_parse', on_message_callback=callback, auto_ack=True)
 
     channel.start_consuming()
 
