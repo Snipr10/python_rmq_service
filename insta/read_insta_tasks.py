@@ -3,7 +3,7 @@ import json
 import os
 import datetime
 
-from insta.utils import get_chanel
+from utils import get_chanel
 
 if __name__ == "__main__":
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
