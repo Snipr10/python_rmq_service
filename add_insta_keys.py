@@ -66,7 +66,7 @@ if __name__ == "__main__":
                     body['modified_date'] = body['modified_date'].isoformat()
                 if body['last_modified']:
                     body['last_modified'] = body['last_modified'].isoformat()
-
+                print(body)
                 channel.basic_publish(exchange='',
                                       routing_key='insta_source_parse_key',
                                       body=json.dumps(body))
