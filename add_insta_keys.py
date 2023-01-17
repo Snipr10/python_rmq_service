@@ -60,9 +60,12 @@ if __name__ == "__main__":
 
                 print(model_to_dict(key_word))
                 body = model_to_dict(key_word)
-                body['created_date'] = body['created_date'].isoformat()
-                body['modified_date'] = body['modified_date'].isoformat()
-                body['last_modified'] = body['last_modified'].isoformat()
+                if body['created_date']:
+                    body['created_date'] = body['created_date'].isoformat()
+                if body['modified_date']:
+                    body['modified_date'] = body['modified_date'].isoformat()
+                if body['last_modified']:
+                    body['last_modified'] = body['last_modified'].isoformat()
 
                 channel.basic_publish(exchange='',
                                       routing_key='insta_source_parse_key',
