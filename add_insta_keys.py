@@ -46,7 +46,7 @@ if __name__ == "__main__":
             key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
             print(f"key_source {key_source}")
 
-            key_words = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
+            key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
                                                id__in=list(key_source.values_list('keyword_id', flat=True)),
                                                last_modified__gte=datetime.date(1999, 1, 1),
                                                ).order_by('-last_modified')
