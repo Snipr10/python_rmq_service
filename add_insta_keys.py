@@ -1,0 +1,74 @@
+import json
+
+import os
+import datetime
+import time
+
+from django.db.models import Q
+from django.utils import timezone
+
+from utils import get_chanel, update_time_timezone
+
+if __name__ == "__main__":
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?"
+        ) from exc
+    print(1)
+    import django
+
+    django.setup()
+    import pymysql
+
+    pymysql.install_as_MySQLdb()
+    from core.models import Sources, KeywordSource, Keyword
+    from django.forms.models import model_to_dict
+
+    channel = get_chanel()
+
+    while True:
+        res = channel.queue_declare(
+            queue='insta_source_parse_key',
+        )
+        print('Messages in queue %d' % res.method.message_count)
+        # TODO
+        if res.method.message_count < 10:
+            select_sources = Sources.objects.filter(
+                Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                status=1)
+            print(f"select_sources {select_sources}")
+
+            key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
+            print(f"key_source {key_source}")
+
+            key_words = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
+                                               id__in=list(key_source.values_list('keyword_id', flat=True)),
+                                               last_modified__gte=datetime.date(1999, 1, 1),
+                                               ).order_by('-last_modified')
+
+            if len(key_words) == 0:
+                time.sleep(5 * 60)
+                continue
+            key_words_ids = []
+            for key_word in key_words[:100]:
+                print(key_word)
+
+                print(model_to_dict(key_word))
+                body = model_to_dict(key_word)
+                body['created_date'] = body['created_date'].isoformat()
+                body['modified_date'] = body['modified_date'].isoformat()
+                body['last_modified'] = body['last_modified'].isoformat()
+
+                channel.basic_publish(exchange='',
+                                      routing_key='insta_source_parse_key',
+                                      body=json.dumps(body))
+                key_word.taken = 1
+                key_words_ids.append(key_word)
+            Keyword.objects.bulk_update(key_words_ids, ['taken'],
+                                        batch_size=200)
+            time.sleep(60)
