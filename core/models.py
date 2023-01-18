@@ -162,13 +162,11 @@ class UpdateIndex(models.Model):
 class Sessions(models.Model):
     login = models.CharField(max_length=256)
     password = models.CharField(max_length=256)
-
-    is_active = models.IntegerField(default=1, db_index=True)
-    is_parsing = models.BooleanField(default=False)
     start_parsing = models.DateTimeField(null=True, blank=True)
     last_parsing = models.DateTimeField(null=True, blank=True)
+    is_active = models.IntegerField(default=1, db_index=True)
+    taken = models.BooleanField(default=False)
     proxy_id = models.IntegerField(null=True, blank=True)
-    created = models.DateTimeField()
 
     class Meta:
-        db_table = 'prsr_parser_ok_sessions'
+        db_table = 'prsr_parser_ig_session'
