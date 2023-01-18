@@ -46,7 +46,7 @@ if __name__ == "__main__":
             proxy_ids = []
             for session in select_sessions[:100]:
                 proxy_ids.append(session.proxy_id)
-            proxyies_select = AllProxy.objects.filet(id__in=proxy_ids)
+            proxyies_select = AllProxy.objects.filter(id__in=proxy_ids)
             sessions_id = []
             for session in select_sessions[:100]:
 
