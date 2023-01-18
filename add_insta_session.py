@@ -56,7 +56,7 @@ if __name__ == "__main__":
                     body['start_parsing'] = body['start_parsing'].isoformat()
                 if body['last_parsing']:
                     body['last_parsing'] = body['last_parsing'].isoformat()
-                proxy = proxy_ids.get(id=body['proxy_id'])
+                proxy = proxyies_select.get(id=body['proxy_id'])
                 body['proxy_ip'] = proxy.ip
                 body['proxy_port'] = proxy.port
                 body['proxy_login'] = proxy.login
