@@ -40,6 +40,7 @@ if __name__ == "__main__":
             )
             if len(result) > 10:
                 Sessions.objects.bulk_update(result, ['last_parsing', 'taken'], batch_size=200)
+                result.clear() 
 
         except Exception as e:
             print(f"callback{e}")
