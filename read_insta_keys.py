@@ -6,7 +6,8 @@ import django.db
 
 from utils import get_chanel
 
-if __name__ == "__main__":
+
+def read_keys():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
     try:
         from django.core.management import execute_from_command_line
@@ -46,6 +47,9 @@ if __name__ == "__main__":
             print(f"callback{e}")
             django.db.close_old_connections()
 
-
     channel.basic_consume(queue='insta_source_parse_key_result', on_message_callback=callback, auto_ack=True)
     channel.start_consuming()
+
+
+if __name__ == "__main__":
+    read_keys()

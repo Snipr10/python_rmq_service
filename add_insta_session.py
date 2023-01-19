@@ -11,7 +11,8 @@ from django.utils import timezone
 
 from utils import get_chanel, update_time_timezone
 
-if __name__ == "__main__":
+
+def add_sessions():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
     try:
         from django.core.management import execute_from_command_line
@@ -76,3 +77,7 @@ if __name__ == "__main__":
                 time.sleep(60)
         except Exception:
             django.db.close_old_connections()
+
+
+if __name__ == "__main__":
+    add_sessions()
