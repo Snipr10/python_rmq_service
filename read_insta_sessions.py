@@ -2,6 +2,7 @@ import json
 
 import os
 import datetime
+import django.db
 
 from utils import get_chanel
 
@@ -44,6 +45,7 @@ if __name__ == "__main__":
 
         except Exception as e:
             print(f"callback{e}")
+            django.db.close_old_connections()
 
 
     channel.basic_consume(queue='insta_source_ig_session_parse', on_message_callback=callback, auto_ack=True)

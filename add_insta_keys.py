@@ -6,6 +6,7 @@ import time
 
 from django.db.models import Q
 from django.utils import timezone
+import django.db
 
 from utils import get_chanel, update_time_timezone
 
@@ -32,49 +33,52 @@ if __name__ == "__main__":
     channel = get_chanel()
 
     while True:
-        res = channel.queue_declare(
-            queue='insta_source_parse_key',
-        )
-        print('Messages in queue %d' % res.method.message_count)
-        # TODO
-        if res.method.message_count < 10:
-            select_sources = Sources.objects.filter(
-                Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
-                status=1)
-            print(f"select_sources {select_sources}")
+        try:
+            res = channel.queue_declare(
+                queue='insta_source_parse_key',
+            )
+            print('Messages in queue %d' % res.method.message_count)
+            # TODO
+            if res.method.message_count < 10:
+                select_sources = Sources.objects.filter(
+                    Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                    status=1)
+                print(f"select_sources {select_sources}")
 
-            key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
-            print(f"key_source {key_source}")
+                key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
+                print(f"key_source {key_source}")
 
-            key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
-                                               id__in=list(key_source.values_list('keyword_id', flat=True)),
-                                               last_modified__gte=datetime.date(1999, 1, 1),
-                                               ).order_by('-last_modified')
+                key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
+                                                   id__in=list(key_source.values_list('keyword_id', flat=True)),
+                                                   last_modified__gte=datetime.date(1999, 1, 1),
+                                                   ).order_by('-last_modified')
 
-            if len(key_words) == 0:
-                time.sleep(5 * 60)
-                continue
-            key_words_ids = []
-            for key_word in key_words[:100]:
-                print(key_word)
+                if len(key_words) == 0:
+                    time.sleep(5 * 60)
+                    continue
+                key_words_ids = []
+                for key_word in key_words[:100]:
+                    print(key_word)
 
-                print(model_to_dict(key_word))
-                body = model_to_dict(key_word)
-                if body['created_date']:
-                    body['created_date'] = body['created_date'].isoformat()
-                if body['modified_date']:
-                    body['modified_date'] = body['modified_date'].isoformat()
-                if body['last_modified']:
-                    body['last_modified'] = body['last_modified'].isoformat()
-                if body['depth']:
-                    body['depth'] = body['depth'].isoformat()
+                    print(model_to_dict(key_word))
+                    body = model_to_dict(key_word)
+                    if body['created_date']:
+                        body['created_date'] = body['created_date'].isoformat()
+                    if body['modified_date']:
+                        body['modified_date'] = body['modified_date'].isoformat()
+                    if body['last_modified']:
+                        body['last_modified'] = body['last_modified'].isoformat()
+                    if body['depth']:
+                        body['depth'] = body['depth'].isoformat()
 
-                print(body)
-                channel.basic_publish(exchange='',
-                                      routing_key='insta_source_parse_key',
-                                      body=json.dumps(body))
-                key_word.taken = 1
-                key_words_ids.append(key_word)
-            Keyword.objects.bulk_update(key_words_ids, ['taken'],
-                                        batch_size=200)
-            time.sleep(60)
+                    print(body)
+                    channel.basic_publish(exchange='',
+                                          routing_key='insta_source_parse_key',
+                                          body=json.dumps(body))
+                    key_word.taken = 1
+                    key_words_ids.append(key_word)
+                Keyword.objects.bulk_update(key_words_ids, ['taken'],
+                                            batch_size=200)
+                time.sleep(60)
+        except Exception:
+            django.db.close_old_connections()

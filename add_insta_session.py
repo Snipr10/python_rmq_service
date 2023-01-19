@@ -4,6 +4,7 @@ import os
 import datetime
 import time
 from datetime import timedelta
+import django.db
 
 from django.db.models import Q
 from django.utils import timezone
@@ -33,42 +34,45 @@ if __name__ == "__main__":
     channel = get_chanel()
 
     while True:
-        res = channel.queue_declare(
-            queue='insta_source_ig_session_new',
-        )
-        print('Messages in queue %d' % res.method.message_count)
-        # TODO
-        if res.method.message_count < 10:
-            select_sessions = Sessions.objects.filter(
-                Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
-                    timezone.localtime()) - timedelta(minutes=5)), taken=0)
-            print(f"select_sources {select_sessions}")
-            proxy_ids = []
-            for session in select_sessions[:100]:
-                proxy_ids.append(session.proxy_id)
-            proxyies_select = AllProxy.objects.filter(id__in=proxy_ids)
-            sessions_id = []
-            for session in select_sessions[:100]:
+        try:
+            res = channel.queue_declare(
+                queue='insta_source_ig_session_new',
+            )
+            print('Messages in queue %d' % res.method.message_count)
+            # TODO
+            if res.method.message_count < 10:
+                select_sessions = Sessions.objects.filter(
+                    Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
+                        timezone.localtime()) - timedelta(minutes=5)), taken=0)
+                print(f"select_sources {select_sessions}")
+                proxy_ids = []
+                for session in select_sessions[:100]:
+                    proxy_ids.append(session.proxy_id)
+                proxyies_select = AllProxy.objects.filter(id__in=proxy_ids)
+                sessions_id = []
+                for session in select_sessions[:100]:
 
-                print(model_to_dict(session))
-                body = model_to_dict(session)
-                if body['start_parsing']:
-                    body['start_parsing'] = body['start_parsing'].isoformat()
-                if body['last_parsing']:
-                    body['last_parsing'] = body['last_parsing'].isoformat()
-                proxy = proxyies_select.get(id=body['proxy_id'])
-                body['proxy_ip'] = proxy.ip
-                body['proxy_port'] = proxy.port
-                body['proxy_login'] = proxy.login
-                body['proxy_pass'] = proxy.proxy_password
+                    print(model_to_dict(session))
+                    body = model_to_dict(session)
+                    if body['start_parsing']:
+                        body['start_parsing'] = body['start_parsing'].isoformat()
+                    if body['last_parsing']:
+                        body['last_parsing'] = body['last_parsing'].isoformat()
+                    proxy = proxyies_select.get(id=body['proxy_id'])
+                    body['proxy_ip'] = proxy.ip
+                    body['proxy_port'] = proxy.port
+                    body['proxy_login'] = proxy.login
+                    body['proxy_pass'] = proxy.proxy_password
 
-                print(body)
-                channel.basic_publish(exchange='',
-                                      routing_key='insta_source_ig_session_new',
-                                      body=json.dumps(body))
-                session.taken = 1
-                session.start_parsing = update_time_timezone(timezone.localtime())
-                sessions_id.append(session)
-            Sessions.objects.bulk_update(sessions_id, ['taken', 'start_parsing'],
-                                         batch_size=200)
-            time.sleep(60)
+                    print(body)
+                    channel.basic_publish(exchange='',
+                                          routing_key='insta_source_ig_session_new',
+                                          body=json.dumps(body))
+                    session.taken = 1
+                    session.start_parsing = update_time_timezone(timezone.localtime())
+                    sessions_id.append(session)
+                Sessions.objects.bulk_update(sessions_id, ['taken', 'start_parsing'],
+                                             batch_size=200)
+                time.sleep(60)
+        except Exception:
+            django.db.close_old_connections()

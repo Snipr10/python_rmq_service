@@ -6,6 +6,7 @@ import time
 
 from django.db.models import Q
 from django.utils import timezone
+import django.db
 
 from utils import get_chanel, update_time_timezone
 
@@ -32,42 +33,45 @@ if __name__ == "__main__":
     channel = get_chanel()
 
     while True:
-        res = channel.queue_declare(
-            queue='insta_source_parse',
-        )
-        print('Messages in queue %d' % res.method.message_count)
-        # TODO
-        if res.method.message_count < 10:
-            select_sources = Sources.objects.filter(
-                Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
-                status=1)
-            sources_items = SourcesItems.objects.filter(
-                network_id=7,
-                disabled=0,
-                taken=0,
-                source_id__in=list(select_sources.values_list('id', flat=True))
-            ).order_by('last_modified')
-            if len(sources_items) == 0:
-                time.sleep(5 * 60)
-                continue
-            source_ids = []
-            for sources_item in sources_items[:100]:
-                print(sources_item)
-                time_s = select_sources.get(id=sources_item.source_id).sources
-                if time_s is None:
-                    time_s = 0
+        try:
+            res = channel.queue_declare(
+                queue='insta_source_parse',
+            )
+            print('Messages in queue %d' % res.method.message_count)
+            # TODO
+            if res.method.message_count < 10:
+                select_sources = Sources.objects.filter(
+                    Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                    status=1)
+                sources_items = SourcesItems.objects.filter(
+                    network_id=7,
+                    disabled=0,
+                    taken=0,
+                    source_id__in=list(select_sources.values_list('id', flat=True))
+                ).order_by('last_modified')
+                if len(sources_items) == 0:
+                    time.sleep(5 * 60)
+                    continue
+                source_ids = []
+                for sources_item in sources_items[:100]:
+                    print(sources_item)
+                    time_s = select_sources.get(id=sources_item.source_id).sources
+                    if time_s is None:
+                        time_s = 0
 
-                if sources_item.last_modified is None or (
-                        sources_item.last_modified + datetime.timedelta(minutes=time_s) <
-                        update_time_timezone(timezone.localtime())):
-                    print(model_to_dict(sources_item))
-                    body = model_to_dict(sources_item)
-                    body['last_modified'] = body['last_modified'].isoformat()
-                    channel.basic_publish(exchange='',
-                                          routing_key='insta_source_parse',
-                                          body=json.dumps(body))
-                sources_item.taken = 1
-                source_ids.append(sources_item)
-            SourcesItems.objects.bulk_update(source_ids, ['taken'],
-                                             batch_size=200)
-            time.sleep(60)
+                    if sources_item.last_modified is None or (
+                            sources_item.last_modified + datetime.timedelta(minutes=time_s) <
+                            update_time_timezone(timezone.localtime())):
+                        print(model_to_dict(sources_item))
+                        body = model_to_dict(sources_item)
+                        body['last_modified'] = body['last_modified'].isoformat()
+                        channel.basic_publish(exchange='',
+                                              routing_key='insta_source_parse',
+                                              body=json.dumps(body))
+                    sources_item.taken = 1
+                    source_ids.append(sources_item)
+                SourcesItems.objects.bulk_update(source_ids, ['taken'],
+                                                 batch_size=200)
+                time.sleep(60)
+        except Exception:
+            django.db.close_old_connections()
