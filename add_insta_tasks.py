@@ -33,6 +33,8 @@ def add_tasks():
 
     channel = get_chanel()
 
+    Sources.objects.filter(taken=1).update(taken=0)
+
     while True:
         try:
             res = channel.queue_declare(
