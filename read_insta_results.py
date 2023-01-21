@@ -76,6 +76,7 @@ def read_tasks():
                 )
                 update_sphinx.append(UpdateIndex(id=post_id, network_id=7, sphinx_id=post_sphinx_id))
                 if len(post) > 10:
+                    django.db.close_old_connections()
                     try:
                         IgUser.objects.bulk_create(users, batch_size=200, ignore_conflicts=True)
                     except Exception as e:

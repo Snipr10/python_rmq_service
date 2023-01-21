@@ -42,6 +42,7 @@ def read_sessions():
                 )
             )
             if len(result) > 10:
+                django.db.close_old_connections()
                 Sessions.objects.bulk_update(result, ['last_parsing', 'taken', 'is_active'], batch_size=200)
                 result.clear()
 

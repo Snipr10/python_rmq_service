@@ -41,6 +41,7 @@ def read_keys():
                 )
             )
             if len(result) > 10:
+                django.db.close_old_connections()
                 Keyword.objects.bulk_update(result, ['last_modified', 'taken'], batch_size=200)
                 result.clear()
         except Exception as e:
