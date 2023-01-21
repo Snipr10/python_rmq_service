@@ -25,3 +25,6 @@ if __name__ == '__main__':
 
     print("read_tasks")
     threading.Thread(target=read_tasks, args=()).start()
+
+    print("read_insta_results.py")
+    threading.Thread(target=read_insta_results, args=()).start()
