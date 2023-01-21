@@ -36,7 +36,7 @@ def add_tasks():
     while True:
         try:
             res = channel.queue_declare(
-                queue='insta_source_parse',
+                    queue='insta_source_parse',
             )
             print('Messages in queue %d' % res.method.message_count)
             # TODO
