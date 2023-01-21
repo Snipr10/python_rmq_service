@@ -170,3 +170,45 @@ class Sessions(models.Model):
 
     class Meta:
         db_table = 'prsr_parser_ig_session'
+
+
+class IgUser(models.Model):
+    id = models.IntegerField(primary_key=True)
+    sphinx_id = models.IntegerField()
+    name = models.CharField(max_length=255, null=True, blank=True)
+    screen_name = models.CharField(max_length=255, null=True, blank=True)
+    logo = models.CharField(max_length=255, null=True, blank=True)
+    followers = models.IntegerField(default=0)
+    friendly = models.IntegerField(default=0)
+    district = models.IntegerField(default=0)
+    last_modify = models.DateTimeField(default=now)
+    found_date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'prsr_parser_ig_users'
+class IgPost(models.Model):
+    id = models.IntegerField(primary_key=True)
+    owner_id = models.IntegerField()
+    shortcode = models.CharField(max_length=255, null=True, blank=True)
+    owner_sphinx_id = models.IntegerField(default=0)
+    content = models.CharField(max_length=4096, null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    comments = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    sphinx_id = models.IntegerField()
+    found_date = models.DateField(auto_now_add=True)
+    last_modified = models.DateTimeField(default=now)
+    content_hash = models.CharField(max_length=32, null=True, blank=True)
+    group_id = models.CharField(max_length=32, null=True, blank=True)
+
+    class Meta:
+        db_table = 'prsr_parser_ig_posts'
+
+
+class IgMedia(models.Model):
+    id = models.IntegerField(primary_key=True)
+    url = models.CharField(max_length=255, null=True, blank=True)
+    media_type = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'prsr_parser_ig_media'
