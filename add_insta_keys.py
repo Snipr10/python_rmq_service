@@ -35,7 +35,7 @@ def add_keys():
 
     channel = get_chanel()
 
-    Keyword.objects.filter(network_id=7, taken=0).update(taken=0)
+    Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
 
     while True:
         try:

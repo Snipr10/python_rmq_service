@@ -33,7 +33,7 @@ def add_sessions():
     from django.forms.models import model_to_dict
 
     channel = get_chanel()
-    Sessions.objects.filter(taken=0).update(taken=0)
+    Sessions.objects.filter(taken=1).update(taken=0)
 
     while True:
         try:
