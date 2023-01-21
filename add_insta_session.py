@@ -76,6 +76,8 @@ def add_sessions():
                 Sessions.objects.bulk_update(sessions_id, ['taken', 'start_parsing'],
                                              batch_size=200)
                 time.sleep(60)
+            else:
+                time.sleep(2 * 60)
         except Exception:
             django.db.close_old_connections()
 

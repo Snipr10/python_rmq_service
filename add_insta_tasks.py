@@ -76,6 +76,8 @@ def add_tasks():
                 SourcesItems.objects.bulk_update(source_ids, ['taken'],
                                                  batch_size=200)
                 time.sleep(60)
+            else:
+                time.sleep(5 * 60)
         except Exception:
             django.db.close_old_connections()
 

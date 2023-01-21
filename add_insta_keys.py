@@ -85,6 +85,9 @@ def add_keys():
                 Keyword.objects.bulk_update(key_words_ids, ['taken'],
                                             batch_size=200)
                 time.sleep(60)
+            else:
+                time.sleep(5*60)
+
         except Exception:
             django.db.close_old_connections()
 
