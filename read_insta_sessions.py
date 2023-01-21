@@ -38,11 +38,11 @@ def read_sessions():
                     id=body.get("id"),
                     last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
                     taken=0,
-                    banned=body.get("banned"),
+                    is_active=not body.get("banned"),
                 )
             )
             if len(result) > 10:
-                Sessions.objects.bulk_update(result, ['last_parsing', 'taken', 'banned'], batch_size=200)
+                Sessions.objects.bulk_update(result, ['last_parsing', 'taken', 'is_active'], batch_size=200)
                 result.clear()
 
         except Exception as e:
