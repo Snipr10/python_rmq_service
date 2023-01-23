@@ -61,7 +61,7 @@ def add_keys():
                 key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
                                                    id__in=list(key_source.values_list('keyword_id', flat=True)),
                                                    last_modified__gte=datetime.date(1999, 1, 1),
-                                                   ).order_by('-last_modified')
+                                                   ).order_by('last_modified')
 
                 if len(key_words) == 0:
                     time.sleep(5 * 60)
