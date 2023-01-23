@@ -1,31 +1,31 @@
 import threading
 
-import read_insta_results
-from add_insta_keys import add_keys
-from add_insta_session import add_sessions
-from add_insta_tasks import add_tasks
-from read_insta_keys import read_keys
-from read_insta_sessions import read_sessions
-from read_insta_tasks import read_tasks
+from add_insta_keys import add_keys, add_keys_while
+from add_insta_session import add_sessions, add_sessions_while
+from add_insta_tasks import add_tasks, add_tasks_while
+from read_insta_keys import read_keys, read_keys_while
+from read_insta_results import read_reslut_while
+from read_insta_sessions import read_sessions, read_sessions_while
+from read_insta_tasks import read_tasks, read_tasks_while
 
 if __name__ == '__main__':
     print("add_keys")
-    threading.Thread(target=add_keys, args=()).start()
+    threading.Thread(target=add_keys_while, args=()).start()
 
     print("add_sessions")
-    threading.Thread(target=add_sessions, args=()).start()
+    threading.Thread(target=add_sessions_while, args=()).start()
 
     print("add_tasks")
-    threading.Thread(target=add_tasks, args=()).start()
+    threading.Thread(target=add_tasks_while, args=()).start()
 
     print("read_keys")
-    threading.Thread(target=read_keys, args=()).start()
+    threading.Thread(target=read_keys_while, args=()).start()
 
     print("read_sessions")
-    threading.Thread(target=read_sessions, args=()).start()
+    threading.Thread(target=read_sessions_while, args=()).start()
 
     print("read_tasks")
-    threading.Thread(target=read_tasks, args=()).start()
+    threading.Thread(target=read_tasks_while, args=()).start()
 
-    print("read_insta_results.py")
-    threading.Thread(target=read_insta_results, args=()).start()
+    print("read_reslut_while")
+    threading.Thread(target=read_reslut_while, args=()).start()

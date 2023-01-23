@@ -11,7 +11,12 @@ import django.db
 from utils import get_chanel, update_time_timezone
 
 
-
+def add_keys_while():
+    while True:
+        try:
+            add_keys()
+        except Exception:
+            time.sleep(10)
 def add_keys():
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')

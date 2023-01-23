@@ -2,9 +2,19 @@ import datetime
 import json
 
 import os
+import time
+
 import django.db
 
 from utils import get_chanel, get_sphinx_id, get_md5_text
+
+
+def read_reslut_while():
+    while True:
+        try:
+            read_tasks()
+        except Exception:
+            time.sleep(10)
 
 
 def read_tasks():
@@ -32,7 +42,6 @@ def read_tasks():
     sphinx_ids = []
     media = []
     update_sphinx = []
-
 
     def callback(ch, method, properties, body):
         try:

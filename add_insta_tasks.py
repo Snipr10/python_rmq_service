@@ -11,6 +11,14 @@ import django.db
 from utils import get_chanel, update_time_timezone
 
 
+def add_tasks_while():
+    while True:
+        try:
+            add_tasks()
+        except Exception:
+            time.sleep(10)
+
+
 def add_tasks():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
     try:
@@ -38,7 +46,7 @@ def add_tasks():
     while True:
         try:
             res = channel.queue_declare(
-                    queue='insta_source_parse',
+                queue='insta_source_parse',
             )
             print('Messages in queue %d' % res.method.message_count)
             # TODO

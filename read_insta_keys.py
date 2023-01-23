@@ -2,9 +2,19 @@ import json
 
 import os
 import datetime
+import time
+
 import django.db
 
 from utils import get_chanel
+
+
+def read_keys_while():
+    while True:
+        try:
+            read_keys()
+        except Exception:
+            time.sleep(10)
 
 
 def read_keys():

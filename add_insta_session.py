@@ -12,6 +12,14 @@ from django.utils import timezone
 from utils import get_chanel, update_time_timezone
 
 
+def add_sessions_while():
+    while True:
+        try:
+            add_sessions()
+        except Exception:
+            time.sleep(10)
+
+
 def add_sessions():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
     try:
