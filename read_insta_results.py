@@ -79,6 +79,10 @@ def read_tasks():
                     django.db.close_old_connections()
                     try:
                         IgUser.objects.bulk_create(users, batch_size=200, ignore_conflicts=True)
+                    except Exception as e:
+                        print(f"IgUser: {e}")
+                    try:
+                        IgPost.objects.bulk_update(post, ['last_modified'], batch_size=200)
                         users.clear()
                     except Exception as e:
                         print(f"IgUser: {e}")
