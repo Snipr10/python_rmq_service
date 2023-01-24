@@ -5,8 +5,10 @@ import time
 def update_while():
     while True:
         try:
+            print("update_while")
             update()
-        except Exception:
+        except Exception as e:
+            print(f"update_while {e}")
             time.sleep(10)
         time.sleep(15*60)
 
