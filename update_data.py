@@ -32,7 +32,7 @@ def update():
     from core.models import Sessions, Keyword, SourcesItems
     django.db.close_old_connections()
 
-    Sessions.objects.filter(taken=1).update(taken=0)
+    Sessions.objects.filter(taken=1).update(taken=0, is_active=1)
     Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
     SourcesItems.objects.filter(taken=1, network_id=7).update(taken=0)
 
