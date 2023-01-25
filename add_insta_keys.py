@@ -50,22 +50,24 @@ def add_keys():
             print('Messages in queue Key %d' % res.method.message_count)
             # TODO
             if res.method.message_count < 10:
-                print(1_1)
+                print("1_1")
                 select_sources = Sources.objects.filter(
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
-                print(2_1)
+                print("2_1")
 
                 key_source = KeywordSource.objects.filter(
                     source_id__in=list(select_sources.values_list('id', flat=True)))
-                print(3_1)
+                print("3_1")
 
                 key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
                                                    id__in=list(key_source.values_list('keyword_id', flat=True)),
                                                    last_modified__isnull=True,
                                                    )
+                print("4_1")
+
                 if len(key_words) == 0:
-                    print(4_1)
+                    print("5_1")
 
                     key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
                                                        id__in=list(key_source.values_list('keyword_id', flat=True)),
