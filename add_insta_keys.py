@@ -17,8 +17,9 @@ def add_keys_while():
             add_keys()
         except Exception:
             time.sleep(10)
-def add_keys():
 
+
+def add_keys():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
     try:
         from django.core.management import execute_from_command_line
@@ -53,17 +54,24 @@ def add_keys():
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
 
-                key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
+                key_source = KeywordSource.objects.filter(
+                    source_id__in=list(select_sources.values_list('id', flat=True)))
 
                 key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
                                                    id__in=list(key_source.values_list('keyword_id', flat=True)),
-                                                   last_modified__gte=datetime.date(1999, 1, 1),
-                                                   ).order_by('last_modified')
+                                                   last_modified__isnull=True,
+                                                   )
+                if len(key_words) == 0:
+                    key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
+                                                       id__in=list(key_source.values_list('keyword_id', flat=True)),
+                                                       last_modified__gte=datetime.date(1999, 1, 1),
+                                                       ).order_by('last_modified')
 
                 if len(key_words) == 0:
                     time.sleep(5 * 60)
                     continue
                 key_words_ids = []
+                print(f"Key {key_words}")
                 for key_word in key_words[:100]:
 
                     body = model_to_dict(key_word)
@@ -85,7 +93,7 @@ def add_keys():
                                             batch_size=200)
                 time.sleep(60)
             else:
-                time.sleep(5*60)
+                time.sleep(5 * 60)
 
         except Exception:
             django.db.close_old_connections()
