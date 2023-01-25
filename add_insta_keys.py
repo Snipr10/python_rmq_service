@@ -50,36 +50,29 @@ def add_keys():
             print('Messages in queue Key %d' % res.method.message_count)
             # TODO
             if res.method.message_count < 10:
-                print("1_1")
                 select_sources = Sources.objects.filter(
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
-                print("2_1")
 
                 key_source = KeywordSource.objects.filter(
                     source_id__in=list(select_sources.values_list('id', flat=True)))
-                print("3_1")
 
                 Keyword.objects.filter(network_id=7, enabled=1, taken=0,
                                        id__in=list(key_source.values_list('keyword_id', flat=True)),
                                        last_modified__isnull=True,
                                        ).update(last_modified=datetime.date(1999, 1, 1))
-                print("4_1")
 
                 key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
                                                    id__in=list(key_source.values_list('keyword_id', flat=True)),
                                                    last_modified__gte=datetime.date(1999, 1, 1),
                                                    ).order_by('last_modified')
 
-                print("6_1")
                 if len(key_words) == 0:
                     time.sleep(5 * 60)
                     continue
                 key_words_ids = []
                 for key_word in key_words[:100]:
-                    print(1)
                     body = model_to_dict(key_word)
-                    print(2)
                     try:
                         if body['created_date']:
                             body['created_date'] = body['created_date'].isoformat()
