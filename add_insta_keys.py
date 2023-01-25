@@ -95,7 +95,8 @@ def add_keys():
             else:
                 time.sleep(5 * 60)
 
-        except Exception:
+        except Exception as e:
+            printf("Key {e}")
             django.db.close_old_connections()
 
 
