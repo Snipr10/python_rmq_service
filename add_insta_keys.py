@@ -75,14 +75,26 @@ def add_keys():
                 for key_word in key_words[:100]:
 
                     body = model_to_dict(key_word)
-                    if body['created_date']:
-                        body['created_date'] = body['created_date'].isoformat()
-                    if body['modified_date']:
-                        body['modified_date'] = body['modified_date'].isoformat()
-                    if body['last_modified']:
-                        body['last_modified'] = body['last_modified'].isoformat()
-                    if body['depth']:
-                        body['depth'] = body['depth'].isoformat()
+                    try:
+                        if body['created_date']:
+                            body['created_date'] = body['created_date'].isoformat()
+                    except Exception:
+                        pass
+                    try:
+                        if body['modified_date']:
+                            body['modified_date'] = body['modified_date'].isoformat()
+                    except Exception:
+                        pass
+                    try:
+                        if body['last_modified']:
+                            body['last_modified'] = body['last_modified'].isoformat()
+                    except Exception:
+                        pass
+                    try:
+                        if body['depth']:
+                            body['depth'] = body['depth'].isoformat()
+                    except Exception:
+                        pass
 
                     channel.basic_publish(exchange='',
                                           routing_key='insta_source_parse_key',
