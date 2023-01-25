@@ -48,7 +48,7 @@ def add_tasks():
             res = channel.queue_declare(
                 queue='insta_source_parse',
             )
-            print('Messages in queue %d' % res.method.message_count)
+            print('Messages in queue tasks %d' % res.method.message_count)
             # TODO
             if res.method.message_count < 10:
                 select_sources = Sources.objects.filter(
@@ -65,7 +65,6 @@ def add_tasks():
                     continue
                 source_ids = []
                 for sources_item in sources_items[:100]:
-                    print(sources_item)
                     time_s = select_sources.get(id=sources_item.source_id).sources
                     if time_s is None:
                         time_s = 0
@@ -73,7 +72,6 @@ def add_tasks():
                     if sources_item.last_modified is None or (
                             sources_item.last_modified + datetime.timedelta(minutes=time_s) <
                             update_time_timezone(timezone.localtime())):
-                        print(model_to_dict(sources_item))
                         body = model_to_dict(sources_item)
                         body['last_modified'] = body['last_modified'].isoformat()
                         channel.basic_publish(exchange='',

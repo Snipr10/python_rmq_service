@@ -56,7 +56,6 @@ def add_sessions():
                 select_sessions = Sessions.objects.filter(
                     Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
                         timezone.localtime()) - timedelta(minutes=5)), taken=0, is_active__lte=10)
-                print(f"select_sources {select_sessions}")
                 proxy_ids = []
                 for session in select_sessions[:100]:
                     proxy_ids.append(session.proxy_id)
@@ -64,7 +63,6 @@ def add_sessions():
                 sessions_id = []
                 for session in select_sessions[:100]:
 
-                    print(model_to_dict(session))
                     body = model_to_dict(session)
                     if body['start_parsing']:
                         body['start_parsing'] = body['start_parsing'].isoformat()
@@ -76,7 +74,6 @@ def add_sessions():
                     body['proxy_login'] = proxy.login
                     body['proxy_pass'] = proxy.proxy_password
 
-                    print(body)
                     channel.basic_publish(exchange='',
                                           routing_key='insta_source_ig_session_new',
                                           body=json.dumps(body))

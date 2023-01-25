@@ -28,7 +28,6 @@ def add_keys():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    print(1)
     import django
 
     django.setup()
@@ -47,16 +46,14 @@ def add_keys():
             res = channel.queue_declare(
                 queue='insta_source_parse_key',
             )
-            print('Messages in queue %d' % res.method.message_count)
+            print('Messages in queue Key %d' % res.method.message_count)
             # TODO
             if res.method.message_count < 10:
                 select_sources = Sources.objects.filter(
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
-                print(f"select_sources {select_sources}")
 
                 key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
-                print(f"key_source {key_source}")
 
                 key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
                                                    id__in=list(key_source.values_list('keyword_id', flat=True)),
@@ -68,9 +65,7 @@ def add_keys():
                     continue
                 key_words_ids = []
                 for key_word in key_words[:100]:
-                    print(key_word)
 
-                    print(model_to_dict(key_word))
                     body = model_to_dict(key_word)
                     if body['created_date']:
                         body['created_date'] = body['created_date'].isoformat()
@@ -81,7 +76,6 @@ def add_keys():
                     if body['depth']:
                         body['depth'] = body['depth'].isoformat()
 
-                    print(body)
                     channel.basic_publish(exchange='',
                                           routing_key='insta_source_parse_key',
                                           body=json.dumps(body))
