@@ -106,7 +106,13 @@ def add_keys():
                 time.sleep(5 * 60)
 
         except Exception as e:
+            try:
+                channel.stop_consuming()
+            except Exception:
+                pass
             print(f"Key {e}")
+            channel = get_chanel()
+
             django.db.close_old_connections()
 
 
