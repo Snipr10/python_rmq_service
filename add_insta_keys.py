@@ -73,8 +73,9 @@ def add_keys():
                 key_words_ids = []
                 print(f"Key {key_words}")
                 for key_word in key_words[:100]:
-
+                    print(1)
                     body = model_to_dict(key_word)
+                    print(2)
                     try:
                         if body['created_date']:
                             body['created_date'] = body['created_date'].isoformat()
