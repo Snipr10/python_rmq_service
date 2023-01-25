@@ -74,11 +74,11 @@ def add_keys():
                                                        last_modified__gte=datetime.date(1999, 1, 1),
                                                        ).order_by('last_modified')
 
+                print("6_1")
                 if len(key_words) == 0:
                     time.sleep(5 * 60)
                     continue
                 key_words_ids = []
-                print(f"Key {key_words}")
                 for key_word in key_words[:100]:
                     print(1)
                     body = model_to_dict(key_word)
