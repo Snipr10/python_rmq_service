@@ -65,7 +65,8 @@ def add_keys():
                                                    last_modified__isnull=True,
                                                    )
                 print("4_1")
-
+                print(key_words)
+                print("4_2")
                 if len(key_words) == 0:
                     print("5_1")
 
