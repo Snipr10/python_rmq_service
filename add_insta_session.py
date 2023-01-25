@@ -48,7 +48,9 @@ def add_sessions():
             res = channel.queue_declare(
                 queue='insta_source_ig_session_new',
             )
-            print('Messages in queue %d' % res.method.message_count)
+            print('Messages in queue session %d' % res.method.message_count)
+            print(update_time_timezone(
+                        timezone.localtime()) - timedelta(minutes=5))
             # TODO
             if res.method.message_count < 10:
                 select_sessions = Sessions.objects.filter(
