@@ -35,27 +35,58 @@ def read_sessions():
 
     pymysql.install_as_MySQLdb()
     from core.models import Sessions
+    from django.db.models import F
 
     channel = get_chanel()
     result = []
+    result_ban = []
+    result_ban_ids = []
+    result_ok = []
 
     def callback(ch, method, properties, body):
         try:
             body = json.loads(body.decode("utf-8"))
             print(body)
-            result.append(
-                Sessions(
-                    id=body.get("id"),
-                    last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
-                    taken=0,
-                    is_active=not body.get("banned"),
+            if body.get("banned"):
+                result_ban.append(
+                    Sessions(
+                        id=body.get("id"),
+                        last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
+                        taken=0,
+                    )
                 )
-            )
-            if len(result) > 10:
+                result_ban_ids.append(body.get("id"))
+            else:
+                result_ok.append(
+                    Sessions(
+                        id=body.get("id"),
+                        last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
+                        taken=0,
+                        is_active=1
+                    )
+                )
+            # result.append(
+            #     Sessions(
+            #         id=body.get("id"),
+            #         last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
+            #         taken=0,
+            #         is_active=not body.get("banned"),
+            #     )
+            # )
+            # if len(result) > 10:
+            #     django.db.close_old_connections()
+            #     Sessions.objects.bulk_update(result, ['last_parsing', 'taken', 'is_active'], batch_size=200)
+            #     result.clear()
+            if len(result_ok) > 2:
                 django.db.close_old_connections()
-                Sessions.objects.bulk_update(result, ['last_parsing', 'taken', 'is_active'], batch_size=200)
-                result.clear()
-
+                Sessions.objects.bulk_update(result_ok, ['last_parsing', 'taken', 'is_active'], batch_size=200)
+                result_ok.clear()
+            if len(result_ban) > 2:
+                django.db.close_old_connections()
+                Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken'], batch_size=200)
+                Sessions.objects.filter(id__in=result_ban_ids).update(is_active=F('is_active') + 1)
+                result_ban_ids.clear()
+                result_ok.clear()
         except Exception as e:
             print(f"callback{e}")
             django.db.close_old_connections()

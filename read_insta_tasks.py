@@ -8,12 +8,15 @@ import django.db
 
 from utils import get_chanel
 
+
 def read_tasks_while():
     while True:
         try:
             read_tasks()
         except Exception:
             time.sleep(10)
+
+
 def read_tasks():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
     try:
