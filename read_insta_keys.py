@@ -50,7 +50,7 @@ def read_keys():
                     taken=0
                 )
             )
-            if len(result) > 10:
+            if len(result) > 1:
                 django.db.close_old_connections()
                 Keyword.objects.bulk_update(result, ['last_modified', 'taken'], batch_size=200)
                 result.clear()
