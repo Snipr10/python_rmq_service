@@ -52,16 +52,16 @@ def add_sessions():
             print(update_time_timezone(
                         timezone.localtime()) - timedelta(minutes=5))
             # TODO
-            if res.method.message_count < 10:
+            if res.method.message_count < 2:
                 select_sessions = Sessions.objects.filter(
                     Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
-                        timezone.localtime()) - timedelta(minutes=5)), taken=0, is_active__lte=10)
+                        timezone.localtime()) - timedelta(minutes=5)), taken=0, is_active__lte=10, session_id__isnull=True)
                 proxy_ids = []
                 for session in select_sessions[:100]:
                     proxy_ids.append(session.proxy_id)
                 proxyies_select = AllProxy.objects.filter(id__in=proxy_ids)
                 sessions_id = []
-                for session in select_sessions[:100]:
+                for session in select_sessions[:2]:
 
                     body = model_to_dict(session)
                     if body['start_parsing']:
