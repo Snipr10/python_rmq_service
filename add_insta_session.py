@@ -55,7 +55,7 @@ def add_sessions():
             if res.method.message_count < 10:
                 select_sessions = Sessions.objects.filter(
                     Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
-                        timezone.localtime()) - timedelta(minutes=5)), taken=0, is_active__lte=10, session_id__isnull=False)
+                        timezone.localtime()) - timedelta(minutes=5)), taken=0, is_active__lte=10)
                 proxy_ids = []
                 for session in select_sessions[:100]:
                     proxy_ids.append(session.proxy_id)
