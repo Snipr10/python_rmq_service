@@ -52,6 +52,7 @@ def read_sessions():
                     Sessions(
                         id=body.get("id"),
                         last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
+                        session_id=None,
                         taken=0,
                     )
                 )
@@ -62,6 +63,7 @@ def read_sessions():
                         id=body.get("id"),
                         last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
                         taken=0,
+                        session_id=body.get(""),
                         is_active=1
                     )
                 )
@@ -79,14 +81,14 @@ def read_sessions():
             #     result.clear()
             if len(result_ok) > 2:
                 django.db.close_old_connections()
-                Sessions.objects.bulk_update(result_ok, ['last_parsing', 'taken', 'is_active'], batch_size=200)
+                Sessions.objects.bulk_update(result_ok, ['last_parsing', 'taken', 'is_active', 'session_id'], batch_size=200)
                 result_ok.clear()
             if len(result_ban) > 2:
                 django.db.close_old_connections()
-                Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken'], batch_size=200)
+                Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken', 'session_id'], batch_size=200)
                 Sessions.objects.filter(id__in=result_ban_ids).update(is_active=F('is_active') + 1)
                 result_ban_ids.clear()
-                result_ok.clear()
+                result_ban.clear()
         except Exception as e:
             print(f"callback{e}")
             django.db.close_old_connections()
