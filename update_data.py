@@ -47,7 +47,7 @@ def update():
         s.taken = 0
         s.is_active = 1
         s.save()
-    # Sessions.objects.all(taken=1).update(taken=0, is_active=1)
+    Sessions.objects.all(taken=1).update(taken=0, is_active=1)
 
 
 if __name__ == "__main__":
