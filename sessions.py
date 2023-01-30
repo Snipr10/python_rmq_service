@@ -20,16 +20,18 @@ if __name__ == '__main__':
     import pymysql
 
     pymysql.install_as_MySQLdb()
-    from core.models import Sessions
+    from core.models import Sessions, AllProxy
 
     for s in Sessions.objects.filter(session_id__isnull=True):
         try:
+            proxy = AllProxy.objects.filter(port=30001).order_by('?')[0]
             cl = Client(
-                proxy=f"http://franz_allan_mati_io:1926ad016e@193.192.1.79:30001",
+                proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
             )
+
             cl.login(s.login, s.password)
             s_id = cl.authorization_data['sessionid']
             s.session_id = s_id
             s.save()
         except Exception as e:
-            print(f"{s.login } {e}")
+            print(f"{s.login} {e}")
