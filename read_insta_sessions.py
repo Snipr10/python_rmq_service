@@ -63,7 +63,7 @@ def read_sessions():
                         id=body.get("id"),
                         last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
                         taken=0,
-                        session_id=body.get(""),
+                        session_id=body.get("session_id"),
                         is_active=1
                     )
                 )
