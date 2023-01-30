@@ -52,7 +52,7 @@ def add_sessions():
             print(update_time_timezone(
                         timezone.localtime()) - timedelta(minutes=5))
             # TODO
-            if res.method.message_count < 2:
+            if res.method.message_count < 10:
                 select_sessions = Sessions.objects.filter(
                     Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
                         timezone.localtime()) - timedelta(minutes=5)), taken=0, is_active__lte=10, session_id__isnull=False)
