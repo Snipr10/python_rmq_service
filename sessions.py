@@ -33,7 +33,7 @@ def update_session_id():
 
     for s in Sessions.objects.filter(session_id__isnull=True):
         try:
-            proxy = AllProxy.objects.filter(port=30001).order_by('?')[0]
+            proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
             cl = Client(
                 proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
             )
