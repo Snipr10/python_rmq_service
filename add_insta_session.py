@@ -61,7 +61,7 @@ def add_sessions():
                     proxy_ids.append(session.proxy_id)
                 proxyies_select = AllProxy.objects.filter(id__in=proxy_ids)
                 sessions_id = []
-                for session in select_sessions[:2]:
+                for session in select_sessions[:100]:
 
                     body = model_to_dict(session)
                     if body['start_parsing']:
