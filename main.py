@@ -7,6 +7,7 @@ from read_insta_keys import read_keys_while
 from read_insta_results import read_reslut_while
 from read_insta_sessions import read_sessions_while
 from read_insta_tasks import read_tasks_while
+from sessions import update_session_id_while
 from update_data import update_while
 
 if __name__ == '__main__':
@@ -34,3 +35,5 @@ if __name__ == '__main__':
     print("read_reslut_while")
     threading.Thread(target=read_reslut_while, args=()).start()
 
+    print("update_session_id_while")
+    threading.Thread(target=update_session_id_while, args=()).start()
