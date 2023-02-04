@@ -47,7 +47,7 @@ def update_session_id():
 
             cl.login(s.login, s.password)
             s_id = cl.authorization_data['sessionid']
-            s.is_active = 0
+            s.is_active = 1
             s.session_id = s_id
             s.save()
         except Exception as e:
