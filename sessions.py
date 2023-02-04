@@ -36,7 +36,7 @@ def update_session_id():
     from utils import update_time_timezone
     from django.utils import timezone
 
-    sessions = list(Sessions.objects.all().values('login'))
+    sessions = list(Sessions.objects.all().values_list('login', flat=True))
     print(sessions)
     for s in Sessions.objects.filter(session_id__isnull=True, is_active__lte=20):
         try:
