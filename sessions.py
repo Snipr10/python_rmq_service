@@ -81,4 +81,9 @@ def update_session_id():
 
 
 if __name__ == '__main__':
-    update_session_id()
+    while True:
+        try:
+            update_session_id()
+        except Exception:
+            time.sleep(5 * 60)
+
