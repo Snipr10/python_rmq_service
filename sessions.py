@@ -3,13 +3,17 @@ import time
 
 from instagrapi import Client
 
+from core.models import Bot
+from utils import update_time_timezone
+from django.utils import timezone
+
 
 def update_session_id_while():
     while True:
         try:
             update_session_id()
         except Exception:
-            time.sleep(30*60)
+            time.sleep(30 * 60)
 
 
 def update_session_id():
@@ -31,7 +35,8 @@ def update_session_id():
     pymysql.install_as_MySQLdb()
     from core.models import Sessions, AllProxy
 
-    for s in Sessions.objects.filter(session_id__isnull=True):
+    sessions = Sessions.objects.all().values_list('login')
+    for s in Sessions.objects.filter(session_id__isnull=True, is_active__lte=20):
         try:
             proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
             cl = Client(
@@ -40,10 +45,36 @@ def update_session_id():
 
             cl.login(s.login, s.password)
             s_id = cl.authorization_data['sessionid']
+            s.is_active = 0
             s.session_id = s_id
             s.save()
         except Exception as e:
+            s.is_active += 1
+            s.save()
             print(f"{s.login} {e}")
+
+    for b in Bot.objects.filter(nework=7, banned=0).count():
+        if b.login not in sessions:
+            try:
+                proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
+                cl = Client(
+                    proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
+                )
+                cl.login(b.login, b.password)
+                Sessions.objects.create(
+                    login=b.login,
+                    password=b.password,
+                    start_parsing=update_time_timezone(timezone.localtime()),
+                    last_parsing=update_time_timezone(timezone.localtime()),
+                    is_active=1,
+                    taken=0,
+                    proxy_id=proxy.id,
+                    session_id=cl.authorization_data['sessionid']
+                )
+
+            except Exception as e:
+                print(f"Bot session {e}")
+                pass
 
 
 if __name__ == '__main__':

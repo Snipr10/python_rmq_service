@@ -37,16 +37,16 @@ def update():
 
     Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
     SourcesItems.objects.filter(taken=1, network_id=7).update(taken=0)
-    Sessions.objects.filter(is_active__lte=10, taken=1).update(taken=0)
-
-    proxy_ids = []
-    for s in Sessions.objects.all():
-        proxy_ids.append(s.proxy_id)
-    for s in Sessions.objects.filter(is_active__gte=10):
-        s.proxy_id = random.choice(proxy_ids)
-        s.taken = 0
-        s.is_active = 1
-        s.save()
+    # Sessions.objects.filter(is_active__lte=10, taken=1).update(taken=0)
+    #
+    # proxy_ids = []
+    # for s in Sessions.objects.all():
+    #     proxy_ids.append(s.proxy_id)
+    # for s in Sessions.objects.filter(is_active__gte=10):
+    #     s.proxy_id = random.choice(proxy_ids)
+    #     s.taken = 0
+    #     s.is_active = 1
+    #     s.save()
     # Sessions.objects.filter(taken=1).update(taken=0, is_active=1)
 
 

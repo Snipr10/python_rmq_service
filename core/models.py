@@ -213,3 +213,14 @@ class IgMedia(models.Model):
 
     class Meta:
         db_table = 'prsr_parser_ig_media'
+
+
+class Bot(models.Model):
+    id = models.IntegerField(primary_key=True)
+    nework = models.IntegerField(default=0)
+    banned = models.IntegerField()
+    login = models.CharField(max_length=256)
+    password = models.CharField(max_length=256)
+
+    class Meta:
+        db_table = 'prsr_parser_bot'
