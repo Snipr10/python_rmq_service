@@ -53,7 +53,7 @@ def update_session_id():
         except Exception as e:
             s.is_active += 1
             s.save()
-            print(f"{s.login} {e}")
+            print(f"{s.login} {e} {proxy.id}")
 
     for b in Bot.objects.filter(nework=7, banned=0):
         if b.login not in sessions:
@@ -76,7 +76,7 @@ def update_session_id():
                 print(f"Created {b.login}")
 
             except Exception as e:
-                print(f"Bot session {e} {b.login}")
+                print(f"Bot session {e} {b.login} {proxy.id}")
                 pass
 
 
