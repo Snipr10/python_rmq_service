@@ -73,9 +73,10 @@ def update_session_id():
                     proxy_id=proxy.id,
                     session_id=cl.authorization_data['sessionid']
                 )
+                print(f"Created {b.login}")
 
             except Exception as e:
-                print(f"Bot session {e}")
+                print(f"Bot session {e} {b.login}")
                 pass
 
 
