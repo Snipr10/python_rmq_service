@@ -3,9 +3,7 @@ import time
 
 from instagrapi import Client
 
-from core.models import Bot
-from utils import update_time_timezone
-from django.utils import timezone
+
 
 
 def update_session_id_while():
@@ -34,6 +32,9 @@ def update_session_id():
 
     pymysql.install_as_MySQLdb()
     from core.models import Sessions, AllProxy
+    from core.models import Bot
+    from utils import update_time_timezone
+    from django.utils import timezone
 
     sessions = Sessions.objects.all().values_list('login')
     for s in Sessions.objects.filter(session_id__isnull=True, is_active__lte=20):
