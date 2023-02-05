@@ -37,7 +37,7 @@ def update():
 
     Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
     SourcesItems.objects.filter(taken=1, network_id=7).update(taken=0)
-    # Sessions.objects.filter(is_active__lte=10, taken=1).update(taken=0)
+    Sessions.objects.filter(is_active__lte=10, taken=1).update(taken=0)
     #
     # proxy_ids = []
     # for s in Sessions.objects.all():
