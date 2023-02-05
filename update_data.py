@@ -30,6 +30,8 @@ def update():
     django.setup()
     import pymysql
     import django.db
+    from utils import update_time_timezone
+    from django.utils import timezone
 
     pymysql.install_as_MySQLdb()
     from core.models import Sessions, Keyword, SourcesItems
@@ -37,7 +39,11 @@ def update():
 
     Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
     SourcesItems.objects.filter(taken=1, network_id=7).update(taken=0)
-    Sessions.objects.filter(is_active__lte=10, taken=1).update(taken=0)
+    Sessions.objects.filter(is_active__lte=10, taken=1).update(
+        taken=0,
+        start_parsing=update_time_timezone(timezone.localtime()),
+        last_parsing=update_time_timezone(timezone.localtime()),
+    )
     #
     # proxy_ids = []
     # for s in Sessions.objects.all():
