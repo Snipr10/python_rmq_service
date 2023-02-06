@@ -50,6 +50,7 @@ def update_session_id():
                 proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
             else:
                 proxy = AllProxy.objects.filter(id=s.proxy_id)[0]
+            proxy = AllProxy.objects.filter(id=s.proxy_id)[0]
 
             cl = Client(
                 proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
