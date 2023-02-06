@@ -1,5 +1,6 @@
 import os
 import time
+import random
 
 from instagrapi import Client
 
@@ -40,7 +41,11 @@ def update_session_id():
     print(sessions)
     for s in Sessions.objects.filter(session_id__isnull=True, is_active__lte=20):
         try:
-            proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
+            if random.choice([True, False]):
+                proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
+            else:
+                proxy = AllProxy.objects.filter(id=s.proxy_id)[0]
+
             cl = Client(
                 proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
             )
@@ -48,6 +53,7 @@ def update_session_id():
             cl.login(s.login, s.password)
             s_id = cl.authorization_data['sessionid']
             s.is_active = 1
+            s.proxy_id = proxy.id
             s.session_id = s_id
             s.save()
         except Exception as e:
