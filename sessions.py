@@ -55,29 +55,29 @@ def update_session_id():
             s.save()
             print(f"{s.login} {e} {proxy.id}")
 
-    for b in Bot.objects.filter(nework=7, banned=0):
-        if b.login not in sessions:
-            try:
-                proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
-                cl = Client(
-                    proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
-                )
-                cl.login(b.login, b.password)
-                Sessions.objects.create(
-                    login=b.login,
-                    password=b.password,
-                    start_parsing=update_time_timezone(timezone.localtime()),
-                    last_parsing=update_time_timezone(timezone.localtime()),
-                    is_active=1,
-                    taken=0,
-                    proxy_id=proxy.id,
-                    session_id=cl.authorization_data['sessionid']
-                )
-                print(f"Created {b.login}")
-
-            except Exception as e:
-                print(f"Bot session {e} {b.login} {proxy.id}")
-                pass
+    # for b in Bot.objects.filter(nework=7, banned=0):
+    #     if b.login not in sessions:
+    #         try:
+    #             proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
+    #             cl = Client(
+    #                 proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
+    #             )
+    #             cl.login(b.login, b.password)
+    #             Sessions.objects.create(
+    #                 login=b.login,
+    #                 password=b.password,
+    #                 start_parsing=update_time_timezone(timezone.localtime()),
+    #                 last_parsing=update_time_timezone(timezone.localtime()),
+    #                 is_active=1,
+    #                 taken=0,
+    #                 proxy_id=proxy.id,
+    #                 session_id=cl.authorization_data['sessionid']
+    #             )
+    #             print(f"Created {b.login}")
+    #
+    #         except Exception as e:
+    #             print(f"Bot session {e} {b.login} {proxy.id}")
+    #             pass
 
 
 if __name__ == '__main__':
