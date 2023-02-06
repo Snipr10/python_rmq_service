@@ -3,8 +3,8 @@ import time
 import random
 
 from instagrapi import Client
-
-
+from random import randint
+from time import sleep
 
 
 def update_session_id_while():
@@ -37,10 +37,14 @@ def update_session_id():
     from core.models import Bot
     from utils import update_time_timezone
     from django.utils import timezone
+    import django.db
 
     sessions = list(Sessions.objects.all().values_list('login', flat=True))
     print(sessions)
     for s in Sessions.objects.filter(session_id__isnull=True, is_active__lte=20):
+
+        sleep(randint(35, 150))
+
         try:
             if random.choice([True, False]):
                 proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
@@ -56,6 +60,7 @@ def update_session_id():
             s.is_active = 1
             s.proxy_id = proxy.id
             s.session_id = s_id
+            django.db.close_old_connections()
             s.save()
         except Exception as e:
             s.is_active += 1
