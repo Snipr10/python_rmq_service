@@ -13,6 +13,7 @@ def update_session_id_while():
             update_session_id()
         except Exception:
             time.sleep(30 * 60)
+        time.sleep(30 * 60)
 
 
 def update_session_id():
