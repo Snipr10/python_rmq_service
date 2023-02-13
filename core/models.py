@@ -168,6 +168,7 @@ class Sessions(models.Model):
     taken = models.BooleanField(default=False)
     proxy_id = models.IntegerField(null=True, blank=True)
     session_id = models.CharField(max_length=256, null=True, blank=True)
+    error_message = models.CharField(max_length=256)
 
     class Meta:
         db_table = 'prsr_parser_ig_session'

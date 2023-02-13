@@ -47,6 +47,10 @@ def read_sessions():
         try:
             body = json.loads(body.decode("utf-8"))
             print(body)
+            try:
+                error_message= body.get("error_message", "")
+            except Exception:
+                error_message = ""
             if body.get("banned"):
                 result_ban.append(
                     Sessions(
@@ -54,6 +58,7 @@ def read_sessions():
                         last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
                         session_id=None,
                         taken=0,
+                        error_message=error_message
                     )
                 )
                 result_ban_ids.append(body.get("id"))
@@ -79,13 +84,13 @@ def read_sessions():
             #     django.db.close_old_connections()
             #     Sessions.objects.bulk_update(result, ['last_parsing', 'taken', 'is_active'], batch_size=200)
             #     result.clear()
-            if len(result_ok) > 2:
+            if len(result_ok) > 0:
                 django.db.close_old_connections()
                 Sessions.objects.bulk_update(result_ok, ['last_parsing', 'taken', 'is_active', 'session_id'], batch_size=200)
                 result_ok.clear()
-            if len(result_ban) > 2:
+            if len(result_ban) > 0:
                 django.db.close_old_connections()
-                Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken', 'session_id'], batch_size=200)
+                Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken', 'session_id', 'error_message'], batch_size=200)
                 Sessions.objects.filter(id__in=result_ban_ids).update(is_active=F('is_active') + 1)
                 result_ban_ids.clear()
                 result_ban.clear()
