@@ -61,6 +61,8 @@ def update_session_id():
             s.is_active = 1
             s.proxy_id = proxy.id
             s.session_id = s_id
+            s.old_session_id = s_id
+            s.error_message = ""
             django.db.close_old_connections()
             s.save()
         except Exception as e:
