@@ -53,6 +53,7 @@ def add_sessions():
                         timezone.localtime()) - timedelta(minutes=5))
             # TODO
             if res.method.message_count < 10:
+                print("try add")
                 select_sessions = Sessions.objects.filter(
                     Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
                         timezone.localtime()) - timedelta(minutes=5)),
@@ -88,7 +89,8 @@ def add_sessions():
                 time.sleep(60)
             else:
                 time.sleep(2 * 60)
-        except Exception:
+        except Exception as e:
+            print(e)
             django.db.close_old_connections()
 
 
