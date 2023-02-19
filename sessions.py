@@ -49,8 +49,10 @@ def update_session_id():
             if random.choice([True, False]):
                 proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
             else:
-                proxy = AllProxy.objects.filter(id=s.proxy_id)[0]
-            proxy = AllProxy.objects.filter(id=s.proxy_id)[0]
+                try:
+                    proxy = AllProxy.objects.filter(id=s.proxy_id)[0]
+                except Exception:
+                    proxy = AllProxy.objects.filter(port__in=[30001, 30010]).order_by('?')[0]
 
             cl = Client(
                 proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
