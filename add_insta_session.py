@@ -66,24 +66,27 @@ def add_sessions():
                 proxyies_select = AllProxy.objects.filter(id__in=proxy_ids)
                 sessions_id = []
                 for session in select_sessions[:100]:
+                    try:
+                        body = model_to_dict(session)
+                        if body['start_parsing']:
+                            body['start_parsing'] = body['start_parsing'].isoformat()
+                        if body['last_parsing']:
+                            body['last_parsing'] = body['last_parsing'].isoformat()
+                        proxy = proxyies_select.get(id=body['proxy_id'])
+                        body['proxy_ip'] = proxy.ip
+                        body['proxy_port'] = proxy.port
+                        body['proxy_login'] = proxy.login
+                        body['proxy_pass'] = proxy.proxy_password
 
-                    body = model_to_dict(session)
-                    if body['start_parsing']:
-                        body['start_parsing'] = body['start_parsing'].isoformat()
-                    if body['last_parsing']:
-                        body['last_parsing'] = body['last_parsing'].isoformat()
-                    proxy = proxyies_select.get(id=body['proxy_id'])
-                    body['proxy_ip'] = proxy.ip
-                    body['proxy_port'] = proxy.port
-                    body['proxy_login'] = proxy.login
-                    body['proxy_pass'] = proxy.proxy_password
-
-                    channel.basic_publish(exchange='',
-                                          routing_key='insta_source_ig_session_new',
-                                          body=json.dumps(body))
-                    session.taken = 1
-                    session.start_parsing = update_time_timezone(timezone.localtime())
-                    sessions_id.append(session)
+                        channel.basic_publish(exchange='',
+                                              routing_key='insta_source_ig_session_new',
+                                              body=json.dumps(body))
+                        session.taken = 1
+                        session.start_parsing = update_time_timezone(timezone.localtime())
+                        sessions_id.append(session)
+                    except Exception as e:
+                        session.proxy_id = None
+                        session.save()
                 Sessions.objects.bulk_update(sessions_id, ['taken', 'start_parsing'],
                                              batch_size=200)
                 time.sleep(60)
