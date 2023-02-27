@@ -15,6 +15,13 @@ def update_session_id_while():
             time.sleep(30 * 60)
         time.sleep(30 * 60)
 
+def challenge_code_handler(username, choice):
+    from instagrapi.mixins.challenge import ChallengeChoice
+    if choice == ChallengeChoice.SMS:
+        return None
+    elif choice == ChallengeChoice.EMAIL:
+        return None
+    return False
 
 def update_session_id():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
@@ -57,6 +64,7 @@ def update_session_id():
             cl = Client(
                 proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
             )
+            cl.challenge_code_handler = challenge_code_handler
 
             cl.login(s.login, s.password)
             s_id = cl.authorization_data['sessionid']
