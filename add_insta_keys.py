@@ -107,13 +107,15 @@ def add_keys():
 
         except Exception as e:
             try:
-                channel.stop_consuming()
-            except Exception:
-                pass
-            print(f"Key {e}")
-            channel = get_chanel()
-
-            django.db.close_old_connections()
+                print(e)
+                try:
+                    channel.stop_consuming()
+                except Exception:
+                    pass
+                channel = get_chanel()
+                django.db.close_old_connections()
+            except Exception as e:
+                print(e)
 
 
 if __name__ == "__main__":

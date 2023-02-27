@@ -93,9 +93,16 @@ def add_sessions():
             else:
                 time.sleep(2 * 60)
         except Exception as e:
-            print(e)
-            django.db.close_old_connections()
-
+            try:
+                print(e)
+                try:
+                    channel.stop_consuming()
+                except Exception:
+                    pass
+                channel = get_chanel()
+                django.db.close_old_connections()
+            except Exception as e:
+                print(e)
 
 if __name__ == "__main__":
     add_sessions()

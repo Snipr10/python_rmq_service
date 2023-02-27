@@ -84,8 +84,17 @@ def add_tasks():
                 time.sleep(60)
             else:
                 time.sleep(5 * 60)
-        except Exception:
-            django.db.close_old_connections()
+        except Exception as e:
+            try:
+                print(e)
+                try:
+                    channel.stop_consuming()
+                except Exception:
+                    pass
+                channel = get_chanel()
+                django.db.close_old_connections()
+            except Exception as e:
+                print(e)
 
 
 if __name__ == "__main__":
