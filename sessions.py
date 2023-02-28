@@ -2,6 +2,7 @@ import os
 import time
 import random
 
+import requests
 from instagrapi import Client
 from random import randint
 from time import sleep
@@ -48,6 +49,55 @@ def update_session_id():
 
     sessions = list(Sessions.objects.all().values_list('login', flat=True))
     print(sessions)
+
+    try:
+        accounts = Sessions.objects.filter()
+        proxies_set = set()
+        for a in accounts:
+            proxies_set.add(a.proxy_id)
+        proxies_list = list(proxies_set)
+        print(f"proxies_list {proxies_list}")
+        work_proxy = []
+        work_proxy_ids = []
+        proxy_candidates = AllProxy.objects.filter(ip__in=[30001, 30011, 30010])
+        for can in proxy_candidates:
+            try:
+                proxy_str = ""
+                proxy_str = f"{can.login}:{can.proxy_password}@{can.ip}:{can.port}"
+                proxies = {'https': f'http://{proxy_str}'}
+                if requests.get("https://www.instagram.com/", proxies=proxies, timeout=10).ok:
+                    work_proxy.append(can)
+                    work_proxy_ids.append(can.id)
+
+            except Exception as e:
+                print(f"{proxy_str} {e}")
+        print(f"work_proxy {work_proxy}")
+        print(f"work_proxy_ids {work_proxy_ids}")
+
+        exist_proxy = AllProxy.objects.filter(id__in=proxies_list)
+        for e_p in exist_proxy:
+            try:
+                proxy_str = ""
+                proxy_str = f"{e_p.login}:{e_p.proxy_password}@{e_p.ip}:{e_p.port}"
+                proxies = {'https': f'http://{proxy_str}'}
+                if requests.get("https://www.instagram.com/", proxies=proxies, timeout=10).ok:
+                    work_proxy.append(e_p)
+                    work_proxy_ids.append(e_p.id)
+            except Exception as e:
+                print(f"{proxy_str} {e}")
+        print(f"work_proxy {work_proxy}")
+        print(f"work_proxy_ids {work_proxy_ids}")
+        for a in accounts:
+            if a.proxy_id not in work_proxy_ids:
+                a.proxy_id = random.choice(work_proxy_ids)
+                a.save(update_fields=["proxy_id"])
+                print(f"account {a}")
+    except Exception as e:
+        print(e)
+
+
+    django.db.close_old_connections()
+
     for s in Sessions.objects.filter(session_id__isnull=True, is_active__lte=20):
 
         sleep(randint(35, 150))
