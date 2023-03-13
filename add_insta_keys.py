@@ -44,10 +44,13 @@ def add_keys():
 
     while True:
         try:
-            for k in Keyword.objects.filter(network_id=7, enabled=1, disabled=0,
+            django.db.close_old_connections()
+
+            for k in Keyword.objects.filter(network_id=7, disabled=0,
                                                    last_modified__gte=datetime.date(1999, 1, 1),
                                                    ):
-                if len(k.keyword) > 20 and len(k.keyword.split(" ")) > 4:
+                if len(k.keyword) > 20 and len(k.keyword.split(" ")) >= 4:
+                    print(k.keyword)
                     k.disabled = 1
                     k.save(update_fields=["disabled"])
         except Exception as e:
