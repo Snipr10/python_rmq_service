@@ -44,6 +44,13 @@ def add_keys():
 
     while True:
         try:
+            for k in Keyword.objects.filter(network_id=7, enabled=1, disabled=0):
+                if len(k) > 20 and len(k.split(" ")) > 4:
+                    k.disabled = 1
+                    k.save(update_fields=["disabled"])
+        except Exception:
+            pass
+        try:
             res = channel.queue_declare(
                 queue='insta_source_parse_key',
             )
@@ -56,13 +63,13 @@ def add_keys():
 
                 key_source = KeywordSource.objects.filter(
                     source_id__in=list(select_sources.values_list('id', flat=True)))
+                #
+                # Keyword.objects.filter(network_id=7, enabled=1, taken=0,
+                #                        id__in=list(key_source.values_list('keyword_id', flat=True)),
+                #                        last_modified__isnull=True,
+                #                        ).update(last_modified=datetime.date(1999, 1, 1))
 
-                Keyword.objects.filter(network_id=7, enabled=1, taken=0,
-                                       id__in=list(key_source.values_list('keyword_id', flat=True)),
-                                       last_modified__isnull=True,
-                                       ).update(last_modified=datetime.date(1999, 1, 1))
-
-                key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0,
+                key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
                                                    id__in=list(key_source.values_list('keyword_id', flat=True)),
                                                    last_modified__gte=datetime.date(1999, 1, 1),
                                                    ).order_by('last_modified')

@@ -102,6 +102,7 @@ class Keyword(models.Model):
     taken = models.BooleanField(default=0)
     reindexing = models.BooleanField(default=0)
     forced = models.BooleanField(default=0)
+    disabled = models.BooleanField(default=0)
 
     class Meta:
         db_table = 'prsr_parser_keywords'
