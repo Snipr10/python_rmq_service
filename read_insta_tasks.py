@@ -47,12 +47,13 @@ def read_tasks():
                 SourcesItems(
                     id=body.get("id"),
                     last_modified=datetime.datetime.fromisoformat(body.get("last_modified")),
-                    taken=0
+                    taken=0,
+                    disabled=body.get("disabled", 0)
                 )
             )
             if len(result) > 1:
                 django.db.close_old_connections()
-                SourcesItems.objects.bulk_update(result, ['last_modified', 'taken'], batch_size=200)
+                SourcesItems.objects.bulk_update(result, ['last_modified', 'taken', 'disabled'], batch_size=200)
                 result.clear()
         except Exception as e:
             print(f"callback{e}")
