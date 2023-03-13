@@ -55,12 +55,18 @@ def add_sessions():
             # TODO
             if res.method.message_count < 10:
                 print("try add")
+                # select_sessions = Sessions.objects.filter(
+                #     Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
+                #         timezone.localtime()) - timedelta(minutes=5)),
+                #     Q(start_parsing__isnull=True) | Q(start_parsing__lte=update_time_timezone(
+                #         timezone.localtime()) - timedelta(minutes=5)),
+                #     taken=0, is_active__lte=10, session_id__isnull=False).order_by("last_parsing")
                 select_sessions = Sessions.objects.filter(
                     Q(last_parsing__isnull=True) | Q(last_parsing__lte=update_time_timezone(
                         timezone.localtime()) - timedelta(minutes=5)),
                     Q(start_parsing__isnull=True) | Q(start_parsing__lte=update_time_timezone(
                         timezone.localtime()) - timedelta(minutes=5)),
-                    taken=0, is_active__lte=10, session_id__isnull=False).order_by("last_parsing")
+                    taken=0, is_active__lte=10, settings__isnull=False).order_by("last_parsing")
                 proxy_ids = []
                 for session in select_sessions[:100]:
                     proxy_ids.append(session.proxy_id)
