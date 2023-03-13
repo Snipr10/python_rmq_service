@@ -44,7 +44,9 @@ def add_keys():
 
     while True:
         try:
-            for k in Keyword.objects.filter(network_id=7, enabled=1, disabled=0):
+            for k in Keyword.objects.filter(network_id=7, enabled=1, disabled=0,
+                                                   last_modified__gte=datetime.date(1999, 1, 1),
+                                                   ):
                 if len(k) > 20 and len(k.split(" ")) > 4:
                     k.disabled = 1
                     k.save(update_fields=["disabled"])
