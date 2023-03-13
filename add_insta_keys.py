@@ -49,7 +49,7 @@ def add_keys():
                     k.disabled = 1
                     k.save(update_fields=["disabled"])
         except Exception as e:
-            print(e)
+            print(f"Keyword {e}")
         try:
             res = channel.queue_declare(
                 queue='insta_source_parse_key',
