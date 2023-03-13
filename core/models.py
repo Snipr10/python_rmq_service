@@ -170,6 +170,8 @@ class Sessions(models.Model):
     session_id = models.CharField(max_length=256, null=True, blank=True)
     error_message = models.CharField(max_length=256)
     old_session_id = models.CharField(max_length=256, null=True, blank=True)
+    old_settings = models.CharField(max_length=1024, null=True, blank=True)
+    settings = models.CharField(max_length=1024, null=True, blank=True)
 
     class Meta:
         db_table = 'prsr_parser_ig_session'

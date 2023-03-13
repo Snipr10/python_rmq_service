@@ -1,3 +1,4 @@
+import ast
 import json
 
 import os
@@ -77,7 +78,8 @@ def add_sessions():
                         body['proxy_port'] = proxy.port
                         body['proxy_login'] = proxy.login
                         body['proxy_pass'] = proxy.proxy_password
-
+                        if body.get("settings"):
+                            body['settings'] = ast.literal_eval(body.get("settings"))
                         channel.basic_publish(exchange='',
                                               routing_key='insta_source_ig_session_new',
                                               body=json.dumps(body))

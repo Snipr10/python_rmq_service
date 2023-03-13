@@ -35,5 +35,5 @@ if __name__ == '__main__':
     print("read_reslut_while")
     threading.Thread(target=read_reslut_while, args=()).start()
 
-    print("update_session_id_while")
-    threading.Thread(target=update_session_id_while, args=()).start()
+    # print("update_session_id_while")
+    # threading.Thread(target=update_session_id_while, args=()).start()
