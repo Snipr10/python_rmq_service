@@ -192,6 +192,8 @@ class IgUser(models.Model):
 
     class Meta:
         db_table = 'prsr_parser_ig_users'
+
+
 class IgPost(models.Model):
     id = models.IntegerField(primary_key=True)
     owner_id = models.IntegerField()
@@ -229,3 +231,11 @@ class Bot(models.Model):
 
     class Meta:
         db_table = 'prsr_parser_bot'
+
+
+class IgProxyBanned(models.Model):
+    id = models.IntegerField(primary_key=True)
+    proxy_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'prsr_parser_proxy_ig'

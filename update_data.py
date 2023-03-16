@@ -35,7 +35,7 @@ def update():
     from django.utils import timezone
 
     pymysql.install_as_MySQLdb()
-    from core.models import Sessions, Keyword, SourcesItems, Sources, KeywordSource
+    from core.models import Sessions, Keyword, SourcesItems, Sources, KeywordSource, AllProxy, IgProxyBanned
     django.db.close_old_connections()
     try:
         Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
@@ -76,6 +76,25 @@ def update():
 
     except Exception as e:
         print(f"sources_items update {e}")
+    try:
+
+        proxies_select = AllProxy.objects.filter(
+            port__in=[30001, 30010, 30010]
+        ).exclude(
+            id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
+        ).values_list('id', flat=True)
+        for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
+            if "proxy" in s.error_message.lower() or "connect" in s.error_message.lower():
+                try:
+                    IgProxyBanned.objects.create(proxy_id=s.proxy_id)
+                except Exception:
+                    pass
+                s.error_message = ""
+                s.proxy_id = random.choice(proxies_select)
+                s.save()
+    except Exception as e:
+        print(f"proxy banned {e}")
+
     # proxy_ids = []
     # for s in Sessions.objects.all():
     #     proxy_ids.append(s.proxy_id)
