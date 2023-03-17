@@ -1,3 +1,4 @@
+import datetime
 import os
 import random
 import time
@@ -94,7 +95,14 @@ def update():
                 s.save()
     except Exception as e:
         print(f"proxy banned {e}")
-
+    try:
+        SourcesItems.objects.filter(network_id=5, disabled=0, last_modified__isnull=True).update(
+            last_modified=datetime.datetime(2000, 1, 1))
+        SourcesItems.objects.filter(network_id=5, disabled=0,
+                                    last_modified__lte=datetime.datetime(1999, 1, 1)).update(
+            last_modified=datetime.datetime(2000, 1, 1))
+    except Exception as e:
+        print(e)
     # proxy_ids = []
     # for s in Sessions.objects.all():
     #     proxy_ids.append(s.proxy_id)
