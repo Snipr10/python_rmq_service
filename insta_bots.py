@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
 
     try:
-        with open("fb_2.txt", "r") as f:
+        with open("insta.txt", "r") as f:
             for line in f:
                 split_ = line.split("|")
                 username, password = split_[0].split(":")
