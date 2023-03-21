@@ -91,6 +91,7 @@ if __name__ == '__main__':
                 except Exception:
                     settings = None
                 at = 0
+                proxy = None
                 while at < 5:
                     if settings is None:
                         try:
