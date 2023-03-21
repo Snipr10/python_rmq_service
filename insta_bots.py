@@ -101,6 +101,9 @@ if __name__ == '__main__':
                             proxy = AllProxy.objects.filter(
                                 port__in=[30001, 30010, 30011]
                             )
+                            print(1.1)
+                            ig_pr = IgProxyBanned.objects.all().values_list('id', flat=True)
+                            print(ig_pr)
                             print(2)
                             proxy = proxy.exclude(
                                 id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
