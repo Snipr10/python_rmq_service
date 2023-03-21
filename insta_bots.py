@@ -33,6 +33,7 @@ if __name__ == '__main__':
     try:
         with open("insta.txt", "r") as f:
             for line in f:
+                settings = None
                 split_ = line.split("|")
                 split_ = [x  for x in split_ if x and len(x)>2]
                 username, password = split_[0].split(":")
@@ -100,20 +101,13 @@ if __name__ == '__main__':
                             print(1)
                             proxy = AllProxy.objects.filter(
                                 port__in=[30001, 30010, 30011]
-                            )
-                            print(1.1)
-                            ig_pr = IgProxyBanned.objects.all().values_list('id', flat=True)
-                            print(ig_pr)
-                            print(2)
-                            proxy = proxy.exclude(
+                            ).exclude(
                                 id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
                             ).order_by('?')[0]
-                            print(3)
 
                             cl = Client(
                                 proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
                             )
-                            print(4)
 
                             cl.challenge_code_handler = challenge_code_handler
 
