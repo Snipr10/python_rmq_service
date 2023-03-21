@@ -88,7 +88,9 @@ if __name__ == '__main__':
                         },
                         "user_agent": split_[1]
                     }
-                except Exception:
+                except Exception as e:
+                    print(f"settings {e}")
+
                     settings = None
                 at = 0
                 proxy = None
@@ -107,8 +109,8 @@ if __name__ == '__main__':
 
                             cl.login_by_sessionid(sessionid)
                             settings = cl.get_settings()
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            print(f"steart {e}")
                     at += 1
                 Sessions.objects.create(
                     login=username,
