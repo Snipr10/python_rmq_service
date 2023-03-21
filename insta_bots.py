@@ -116,6 +116,8 @@ if __name__ == '__main__':
                         except Exception as e:
                             print(f"steart {e}")
                     at += 1
+                django.db.close_old_connections()
+
                 Sessions.objects.create(
                     login=username,
                     password=password,
@@ -127,4 +129,4 @@ if __name__ == '__main__':
                     old_settings=settings
                 )
     except Exception as e:
-        print(e)
+        print(f"unable {e}")
