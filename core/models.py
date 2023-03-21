@@ -238,4 +238,4 @@ class IgProxyBanned(models.Model):
     proxy_id = models.IntegerField()
 
     class Meta:
-        db_table = 'prsr_parser_proxy_ig'
+        db_table = 'prsr_parser_proxy_ig_banned'
