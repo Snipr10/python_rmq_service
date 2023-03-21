@@ -97,14 +97,21 @@ if __name__ == '__main__':
                 while at < 5:
                     if settings is None:
                         try:
+                            print(1)
                             proxy = AllProxy.objects.filter(
                                 port__in=[30001, 30010, 30011]
-                            ).exclude(
+                            )
+                            print(2)
+                            proxy = proxy.exclude(
                                 id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
                             ).order_by('?')[0]
+                            print(3)
+
                             cl = Client(
                                 proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
                             )
+                            print(4)
+
                             cl.challenge_code_handler = challenge_code_handler
 
                             cl.login_by_sessionid(sessionid)
