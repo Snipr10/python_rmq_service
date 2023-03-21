@@ -113,7 +113,7 @@ if __name__ == '__main__':
                 Sessions.objects.create(
                     login=username,
                     password=password,
-                    proxy_id=proxy.id,
+                    proxy_id=proxy.id if proxy is not None else None,
                     session_id=sessionid,
                     error_message=None,
                     old_session_id=sessionid,
