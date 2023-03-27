@@ -48,8 +48,13 @@ if __name__ == '__main__':
                         pass
                 try:
                     _, app_version, _ = split_[1][:split_[1].find("(")].strip().split(" ")
+                    int(app_version)
                 except Exception:
-                    app_version = 25
+                    try:
+                        app_version = split_[1][split_[1].find("(")+1:split_[1].find("/")].strip().split(" ")[0]
+                        int(app_version)
+                    except Exception:
+                        app_version = 25
                 try:
                     android_, dpi, resolution, manufacturer, model, device, cpu, _, version_code = split_[1][
                                                                                                    split_[1].find("(") + 1:
@@ -123,7 +128,7 @@ if __name__ == '__main__':
                     password=password,
                     proxy_id=proxy.id if proxy is not None else None,
                     session_id=sessionid,
-                    error_message=None,
+                    error_message="",
                     old_session_id=sessionid,
                     settings=settings,
                     old_settings=settings
