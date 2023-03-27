@@ -33,7 +33,8 @@ if __name__ == '__main__':
     try:
         with open("insta.txt", "r") as f:
             for line in f:
-                print(line)
+                if not line.strip():
+                    continue
                 settings = None
                 split_ = line.split("|")
                 split_ = [x  for x in split_ if x and len(x)>2]
