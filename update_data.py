@@ -93,6 +93,10 @@ def update():
                 s.error_message = ""
                 s.proxy_id = random.choice(proxies_select)
                 s.save()
+            elif s.proxy_id is None:
+                s.error_message = ""
+                s.proxy_id = random.choice(proxies_select)
+                s.save()
     except Exception as e:
         print(f"proxy banned {e}")
     try:
