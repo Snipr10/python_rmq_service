@@ -102,20 +102,21 @@ def update():
     try:
         SourcesItems.objects.filter(network_id=5, disabled=0, last_modified__isnull=True).update(
             last_modified=datetime.datetime(2000, 1, 1))
+
+    except Exception as e:
+        print(e)
+    try:
         SourcesItems.objects.filter(network_id=5, disabled=0,
                                     last_modified__lte=datetime.datetime(1999, 1, 1)).update(
             last_modified=datetime.datetime(2000, 1, 1))
     except Exception as e:
         print(e)
-    # proxy_ids = []
-    # for s in Sessions.objects.all():
-    #     proxy_ids.append(s.proxy_id)
-    # for s in Sessions.objects.filter(is_active__gte=10):
-    #     s.proxy_id = random.choice(proxy_ids)
-    #     s.taken = 0
-    #     s.is_active = 1
-    #     s.save()
-    # Sessions.objects.filter(taken=1).update(taken=0, is_active=1)
+    try:
+        from django.db import connection
+        cursor = connection.cursor()
+        cursor.execute('''UPDATE prsr_parser_keywords SET last_modified = "2000-01-01 01:01:02" WHERE network_id = 7 AND last_modified < "2000-01-01 01:01:01"''')
+    except Exception as e:
+        print(e)
 
 
 if __name__ == "__main__":
