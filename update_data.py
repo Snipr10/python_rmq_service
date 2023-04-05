@@ -85,7 +85,7 @@ def update():
             id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
         ).values_list('id', flat=True)
         for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
-            if "proxy" in s.error_message.lower() or "connect" in s.error_message.lower():
+            if "proxy" in s.error_message.lower() or "connect" in s.error_message.lower() or "500" in s.error_message.lower():
                 try:
                     IgProxyBanned.objects.create(proxy_id=s.proxy_id)
                 except Exception:
