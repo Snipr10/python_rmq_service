@@ -39,67 +39,71 @@ def update():
     pymysql.install_as_MySQLdb()
     from core.models import Sessions, Keyword, SourcesItems, Sources, KeywordSource, AllProxy, IgProxyBanned
     django.db.close_old_connections()
-    # try:
-    #     Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
-    # except Exception as e:
-    #     print(f"Keyword update {e}")
-    # try:
-    #     SourcesItems.objects.filter(taken=1, network_id=7).update(taken=0)
-    # except Exception as e:
-    #     print(f"SourcesItems update {e}")
-    # try:
-    #
-    #     Sessions.objects.filter(is_active__lte=10, taken=1).update(
-    #         taken=0,
-    #         start_parsing=update_time_timezone(timezone.localtime()),
-    #         last_parsing=update_time_timezone(timezone.localtime()),
-    #     )
-    # except Exception as e:
-    #     print(f"Sessions update {e}")
-    # try:
-    #     select_sources = Sources.objects.filter(published=1, status=1)
-    #
-    #     key_source = KeywordSource.objects.filter(
-    #         source_id__in=list(select_sources.values_list('id', flat=True)))
-    #
-    #     Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0) \
-    #         .exclude(id__in=list(key_source.values_list('keyword_id', flat=True))).update(disabled=1)
-    # except Exception as e:
-    #     print(f"key_source update {e}")
-    # try:
-    #     select_sources = Sources.objects.filter(published=1,
-    #                                             status=1)
-    #     sources_items = SourcesItems.objects.filter(network_id=7,
-    #                                                 disabled=0,
-    #                                                 ).exclude(
-    #         source_id__in=list(select_sources.values_list('id', flat=True)))
-    #
-    #     sources_items.update(disabled=1)
-    #
-    # except Exception as e:
-    #     print(f"sources_items update {e}")
-    # try:
-    #
-    #     proxies_select = AllProxy.objects.filter(
-    #         port__in=[30001, 30010, 30010]
-    #     ).exclude(
-    #         id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
-    #     ).values_list('id', flat=True)
-    #     for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
-    #         if "proxy" in s.error_message.lower() or "connect" in s.error_message.lower() or "500" in s.error_message.lower():
-    #             try:
-    #                 IgProxyBanned.objects.create(proxy_id=s.proxy_id)
-    #             except Exception:
-    #                 pass
-    #             s.error_message = ""
-    #             s.proxy_id = random.choice(proxies_select)
-    #             s.save()
-    #         elif s.proxy_id is None:
-    #             s.error_message = ""
-    #             s.proxy_id = random.choice(proxies_select)
-    #             s.save()
-    # except Exception:
-    #     pass
+    try:
+        Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
+    except Exception as e:
+        print(f"Keyword update {e}")
+    try:
+        SourcesItems.objects.filter(taken=1, network_id=7).update(taken=0)
+    except Exception as e:
+        print(f"SourcesItems update {e}")
+    try:
+
+        Sessions.objects.filter(is_active__lte=10, taken=1).update(
+            taken=0,
+            start_parsing=update_time_timezone(timezone.localtime()),
+            last_parsing=update_time_timezone(timezone.localtime()),
+        )
+    except Exception as e:
+        print(f"Sessions update {e}")
+    try:
+        select_sources = Sources.objects.filter(published=1, status=1)
+
+        key_source = KeywordSource.objects.filter(
+            source_id__in=list(select_sources.values_list('id', flat=True)))
+
+        Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0) \
+            .exclude(id__in=list(key_source.values_list('keyword_id', flat=True))).update(disabled=1)
+    except Exception as e:
+        print(f"key_source update {e}")
+    try:
+        select_sources = Sources.objects.filter(published=1,
+                                                status=1)
+        sources_items = SourcesItems.objects.filter(network_id=7,
+                                                    disabled=0,
+                                                    ).exclude(
+            source_id__in=list(select_sources.values_list('id', flat=True)))
+
+        sources_items.update(disabled=1)
+
+    except Exception as e:
+        print(f"sources_items update {e}")
+    try:
+
+        proxies_select = AllProxy.objects.filter(
+            port__in=[30001, 30010, 30010]
+        # ).exclude(
+        #     id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
+        ).values_list('id', flat=True)
+        for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
+            try:
+
+                if "proxy" in s.error_message.lower() or "connect" in s.error_message.lower() or "500" in s.error_message.lower():
+                    try:
+                        IgProxyBanned.objects.create(proxy_id=s.proxy_id)
+                    except Exception:
+                        pass
+                    s.error_message = ""
+                    s.proxy_id = proxies_select.order_by('?').first()
+                    s.save()
+                elif s.proxy_id is None:
+                    s.error_message = ""
+                    s.proxy_id = proxies_select.order_by('?').first()
+                    s.save()
+            except Exception:
+                pass
+    except Exception:
+        pass
     try:
         for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
             print(s)
@@ -132,24 +136,24 @@ def update():
                 print(f"login_required {e}")
     except Exception as e:
         print(f"proxy banned {e}")
-    # try:
-    #     SourcesItems.objects.filter(network_id=5, disabled=0, last_modified__isnull=True).update(
-    #         last_modified=datetime.datetime(2000, 1, 1))
-    #
-    # except Exception as e:
-    #     print(e)
-    # try:
-    #     SourcesItems.objects.filter(network_id=5, disabled=0,
-    #                                 last_modified__lte=datetime.datetime(1999, 1, 1)).update(
-    #         last_modified=datetime.datetime(2000, 1, 1))
-    # except Exception as e:
-    #     print(e)
-    # try:
-    #     from django.db import connection
-    #     cursor = connection.cursor()
-    #     cursor.execute('''UPDATE prsr_parser_keywords SET last_modified = "2000-01-01 01:01:02" WHERE network_id = 7 AND last_modified < "2000-01-01 01:01:01"''')
-    # except Exception as e:
-    #     print(e)
+    try:
+        SourcesItems.objects.filter(network_id=5, disabled=0, last_modified__isnull=True).update(
+            last_modified=datetime.datetime(2000, 1, 1))
+
+    except Exception as e:
+        print(e)
+    try:
+        SourcesItems.objects.filter(network_id=5, disabled=0,
+                                    last_modified__lte=datetime.datetime(1999, 1, 1)).update(
+            last_modified=datetime.datetime(2000, 1, 1))
+    except Exception as e:
+        print(e)
+    try:
+        from django.db import connection
+        cursor = connection.cursor()
+        cursor.execute('''UPDATE prsr_parser_keywords SET last_modified = "2000-01-01 01:01:02" WHERE network_id = 7 AND last_modified < "2000-01-01 01:01:01"''')
+    except Exception as e:
+        print(e)
 
 
 if __name__ == "__main__":
