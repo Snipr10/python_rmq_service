@@ -94,6 +94,8 @@ def add_tasks():
             else:
                 time.sleep(5 * 60)
         except Exception as e:
+            print(f"insta task {e}")
+
             try:
                 from django.db import connection
                 cursor = connection.cursor()
@@ -102,7 +104,6 @@ def add_tasks():
             except Exception as e:
                 print(e)
             try:
-                print(e)
                 try:
                     channel.stop_consuming()
                 except Exception:
