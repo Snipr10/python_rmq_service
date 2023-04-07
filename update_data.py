@@ -108,9 +108,7 @@ def update():
                 if "login_required" in s.error_message.lower():
                     proxy = AllProxy.objects.filter(
                         port__in=[30001, 30010, 30010]
-                    ).exclude(
-                        id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
-                    ).values_list('id', flat=True).order_by('?').first()
+                    ).order_by('?').first()
                     cl = Client(
                         proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
                     )
@@ -120,11 +118,11 @@ def update():
                     settings["cookies"] = {
                         "sessionid": cl.authorization_data["sessionid"]
                     }
-                s.settings = settings
-                s.proxy_id = proxy.id
-                s.error_message = ""
-                s.save()
-                print(f"save {s}")
+                    s.settings = settings
+                    s.proxy_id = proxy.id
+                    s.error_message = ""
+                    s.save()
+                    print(f"save {s}")
             except Exception as e:
                 print(f"login_required {e}")
     except Exception as e:
