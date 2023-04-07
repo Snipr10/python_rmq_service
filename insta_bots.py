@@ -1,6 +1,8 @@
 import os
 import uuid
 from instagrapi import Client
+
+
 def challenge_code_handler(username, choice):
     from instagrapi.mixins.challenge import ChallengeChoice
     if choice == ChallengeChoice.SMS:
@@ -29,7 +31,6 @@ if __name__ == '__main__':
     pymysql.install_as_MySQLdb()
     from core.models import Sessions, AllProxy, IgProxyBanned
 
-
     try:
         with open("insta.txt", "r") as f:
             for line in f:
@@ -37,7 +38,7 @@ if __name__ == '__main__':
                     continue
                 settings = None
                 split_ = line.split("|")
-                split_ = [x  for x in split_ if x and len(x)>2]
+                split_ = [x for x in split_ if x and len(x) > 2]
                 username, password = split_[0].split(":")
 
                 for ss in split_:
@@ -53,36 +54,23 @@ if __name__ == '__main__':
                     int(app_version)
                 except Exception:
                     try:
-                        app_version = split_[1][split_[1].find("(")+1:split_[1].find("/")].strip().split(" ")[0]
+                        app_version = split_[1][split_[1].find("(") + 1:split_[1].find("/")].strip().split(" ")[0]
                         int(app_version)
                     except Exception:
                         app_version = 25
                 try:
-                    android_, dpi, resolution, manufacturer, model, device, cpu, _, version_code = split_[1][
-                                                                                                   split_[1].find("(") + 1:
-                                                                                                   split_[
-                                                                                                       1].find(")")].split(
-                        ";")
-                    android_version, android_release = android_.split("/")
+                    settings = {}
+                    try:
+                        android_, dpi, resolution, manufacturer, model, device, cpu, _, version_code = split_[1][
+                                                                                                       split_[1].find(
+                                                                                                           "(") + 1:
+                                                                                                       split_[
+                                                                                                           1].find(
+                                                                                                           ")")].split(
+                            ";")
+                        android_version, android_release = android_.split("/")
 
-                    device_id, phone_id, client_session_id, advertising_id = split_[2].split(";")
-
-                    settings = {
-                        "uuids": {
-                            "phone_id": phone_id,
-                            "uuid": uuid.uuid4().urn[9:],
-                            "client_session_id": client_session_id,
-                            "advertising_id": advertising_id,
-                            "device_id": device_id
-                        },
-                        'authorization_data': {'ds_user_id': sessionid.split("%")[0],
-                                               'sessionid': sessionid,
-                                               },
-                        'cookies': {
-                            'sessionid': sessionid
-                        },  # set here your saved cookies
-                        "last_login": None,
-                        "device_settings": {
+                        settings["device_settings"] = {
                             "cpu": cpu.strip(),
                             "dpi": dpi.strip(),
                             "model": model.strip(),
@@ -93,9 +81,49 @@ if __name__ == '__main__':
                             "version_code": version_code.strip(),
                             "android_release": android_release,
                             "android_version": android_version
-                        },
-                        "user_agent": split_[1]
-                    }
+                        }
+                    except Exception:
+                        pass
+                    try:
+                        device_id, phone_id, client_session_id, advertising_id = split_[2].split(";")
+                        settings["uuids"] = {
+                            "phone_id": phone_id,
+                            "uuid": uuid.uuid4().urn[9:],
+                            "client_session_id": client_session_id,
+                            "advertising_id": advertising_id,
+                            "device_id": device_id
+                        }
+                    except Exception:
+                        try:
+                            device_id, phone_id, client_session_id, advertising_id = split_[1][
+                                                                                     split_[1].find(
+                                                                                         "(") + 1:
+                                                                                     split_[
+                                                                                         1].find(
+                                                                                         ")")].split(
+                                ";")
+                            settings["uuids"] = {
+                                "phone_id": phone_id,
+                                "uuid": uuid.uuid4().urn[9:],
+                                "client_session_id": client_session_id,
+                                "advertising_id": advertising_id,
+                                "device_id": device_id
+                            }
+                        except Exception:
+                            pass
+                    settings["authorization_data"] = {'ds_user_id': sessionid.split("%")[0],
+                                               'sessionid': sessionid,
+                                               }
+                    settings["cookies"] = {
+                            'sessionid': sessionid
+                        }
+
+                    try:
+                        user_agent = split_[1]
+                        if "Instagram" in user_agent and "Android" in user_agent:
+                            settings['user_agent'] = user_agent
+                    except Exception:
+                        pass
                 except Exception as e:
                     print(f"settings {e}")
 
