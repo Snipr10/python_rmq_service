@@ -14,9 +14,9 @@ if __name__ == '__main__':
     print("update_while")
     threading.Thread(target=update_while, args=()).start()
 
-    # print("add_keys")
-    # threading.Thread(target=add_keys_while, args=()).start()
-    #
+    print("add_keys")
+    threading.Thread(target=add_keys_while, args=()).start()
+
     print("add_sessions")
     threading.Thread(target=add_sessions_while, args=()).start()
     #
