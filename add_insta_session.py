@@ -102,13 +102,7 @@ def add_sessions():
                 time.sleep(2 * 60)
         except Exception as e:
 
-            try:
-                from django.db import connection
-                cursor = connection.cursor()
-                cursor.execute(
-                    '''UPDATE prsr_parser_keywords SET last_modified = "2000-01-01 01:01:02" WHERE network_id = 7 AND last_modified < "2000-01-01 01:01:01"''')
-            except Exception as e:
-                print(e)
+
             try:
                 print(e)
                 try:
