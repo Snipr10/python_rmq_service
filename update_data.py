@@ -3,6 +3,7 @@ import os
 import random
 import time
 from django.db.models import Q
+from instagrapi import Client
 
 
 def update_while():
@@ -97,6 +98,32 @@ def update():
                 s.error_message = ""
                 s.proxy_id = random.choice(proxies_select)
                 s.save()
+    except Exception:
+        pass
+    try:
+        for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
+            try:
+                settings = None
+                if "login_required" in s.error_message.lower():
+                    proxy = random.choice(AllProxy.objects.filter(
+                        port__in=[30001, 30010, 30010]
+                    ).exclude(
+                        id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
+                    ).values_list('id', flat=True))
+                    cl = Client(
+                        proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
+                    )
+                    cl.login(s.login, s.password)
+                    settings = cl.settings
+                    settings["authorization_data"] = cl.authorization_data
+                    settings["cookies"] = {
+                        "sessionid": cl.authorization_data["sessionid"]
+                    }
+                s.settings = settings
+                s.proxy_id = proxy.id
+                s.save()
+            except Exception as e:
+                print(f"login_required {e}")
     except Exception as e:
         print(f"proxy banned {e}")
     try:
