@@ -108,8 +108,9 @@ def update():
         pass
     try:
         for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
-            print(s)
             try:
+                print(s)
+
                 settings = None
                 if "login_required" in s.error_message.lower():
                     proxy = AllProxy.objects.filter(
