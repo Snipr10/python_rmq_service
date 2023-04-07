@@ -124,6 +124,11 @@ def update():
                     s.save()
                     print(f"save {s}")
             except Exception as e:
+                try:
+                    s.error_message = e
+                    s.save()
+                except Exception:
+                    pass
                 print(f"login_required {e}")
     except Exception as e:
         print(f"proxy banned {e}")
