@@ -51,23 +51,29 @@ def add_tasks():
             print('Messages in queue tasks %d' % res.method.message_count)
             # TODO
             if res.method.message_count < 10:
+                print(1)
                 select_sources = Sources.objects.filter(
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
+                print(2)
                 sources_items = SourcesItems.objects.filter(
                     network_id=7,
                     disabled=0,
                     taken=0,
                     source_id__in=list(select_sources.values_list('id', flat=True))
                 ).order_by('last_modified')
+                print(3)
                 if len(sources_items) == 0:
                     time.sleep(5 * 60)
                     continue
                 source_ids = []
                 for sources_item in sources_items[:100]:
+                    print(4)
+
                     time_s = select_sources.get(id=sources_item.source_id).sources
                     if time_s is None:
                         time_s = 0
+                    print(5)
 
                     if sources_item.last_modified is None or (
                             sources_item.last_modified + datetime.timedelta(minutes=time_s) <
@@ -79,8 +85,11 @@ def add_tasks():
                                               body=json.dumps(body))
                     sources_item.taken = 1
                     source_ids.append(sources_item)
+                    print(6)
+                print(7)
                 SourcesItems.objects.bulk_update(source_ids, ['taken'],
                                                  batch_size=200)
+                print(8)
                 time.sleep(60)
             else:
                 time.sleep(5 * 60)
