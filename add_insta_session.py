@@ -50,8 +50,8 @@ def add_sessions():
                 queue='insta_source_ig_session_new',
             )
             print('Messages in queue session %d' % res.method.message_count)
-            print(update_time_timezone(
-                        timezone.localtime()) - timedelta(minutes=5))
+            # print(update_time_timezone(
+            #             timezone.localtime()) - timedelta(minutes=5))
             # TODO
             if res.method.message_count < 10:
                 print("try add")
