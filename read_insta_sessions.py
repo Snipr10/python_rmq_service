@@ -59,7 +59,7 @@ def read_sessions():
                         session_id=None,
                         settings=None,
                         taken=0,
-                        error_message=error_message
+                        error_message=error_message,
                     )
                 )
                 result_ban_ids.append(body.get("id"))
@@ -71,7 +71,8 @@ def read_sessions():
                         taken=0,
                         settings=body.get("settings"),
                         session_id=body.get("session_id"),
-                        is_active=1
+                        is_active=1,
+                        error_message="ok",
                     )
                 )
             # result.append(
@@ -88,11 +89,11 @@ def read_sessions():
             #     result.clear()
             if len(result_ok) > 0:
                 django.db.close_old_connections()
-                Sessions.objects.bulk_update(result_ok, ['last_parsing', 'taken', 'is_active', 'session_id', 'settings'], batch_size=200)
+                Sessions.objects.bulk_update(result_ok, ['last_parsing', 'taken', 'is_active', 'error_message', 'session_id', 'settings'], batch_size=200)
                 result_ok.clear()
             if len(result_ban) > 0:
                 django.db.close_old_connections()
-                Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken', 'session_id', 'error_message', 'settings'], batch_size=200)
+                Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken', 'session_id',  'error_message', 'settings'], batch_size=200)
                 Sessions.objects.filter(id__in=result_ban_ids).update(is_active=F('is_active') + 1)
                 result_ban_ids.clear()
                 result_ban.clear()
