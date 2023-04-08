@@ -6,7 +6,7 @@ import time
 
 import django.db
 
-from utils import get_chanel
+from utils import get_chanel, update_time_timezone
 
 
 def read_sessions_while():
@@ -55,7 +55,7 @@ def read_sessions():
                 result_ban.append(
                     Sessions(
                         id=body.get("id"),
-                        last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
+                        last_parsing=update_time_timezone(datetime.datetime.fromisoformat(body.get("last_parsing"))),
                         session_id=None,
                         settings=None,
                         taken=0,
@@ -67,7 +67,7 @@ def read_sessions():
                 result_ok.append(
                     Sessions(
                         id=body.get("id"),
-                        last_parsing=datetime.datetime.fromisoformat(body.get("last_parsing")),
+                        last_parsing=update_time_timezone(datetime.datetime.fromisoformat(body.get("last_parsing"))),
                         taken=0,
                         settings=body.get("settings"),
                         session_id=body.get("session_id"),
