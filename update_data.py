@@ -116,6 +116,7 @@ def update():
                         port__in=[30001, 30010, 30010]
                     ).order_by('?').first()
                     from instagrapi import Client
+                    print("cl")
 
                     cl = Client(
                         proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
