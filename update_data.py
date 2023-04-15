@@ -3,6 +3,7 @@ import os
 import random
 import time
 from django.db.models import Q
+from instagrapi import Client
 
 
 def update_while():
@@ -109,21 +110,14 @@ def update():
                     continue
                 settings = None
                 if "login_required" in s.error_message.lower() or "please wait a few minutes" in s.error_message.lower():
-                    print(s)
-                    print(s.login)
                     proxy = AllProxy.objects.filter(
-                        port__in=[30001, 30010, 30010]
+                        port__in=[30001, 30010, 30011]
                     ).order_by('?').first()
-                    from instagrapi import Client
-                    print("cl")
-                    proxy = f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}"
-                    print(proxy)
+
                     cl = Client(
-                        proxy=proxy,
+                        proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
                         settings={}
                     )
-                    print(cl)
-                    print(type(cl))
 
                     def challenge_code_handler(username, choice):
                         from instagrapi.mixins.challenge import ChallengeChoice
@@ -134,6 +128,7 @@ def update():
                         return False
 
                     cl.challenge_code_handler = challenge_code_handler
+
                     cl.login(username=username, password=password, relogin=True)
                     settings = cl.settings
                     settings["authorization_data"] = cl.authorization_data
