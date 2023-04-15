@@ -102,8 +102,12 @@ def update():
     except Exception:
         pass
     try:
-        for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
+        for s in Sessions.objects.filter( settings__isnull=True, old_settings__isnull=False):
             try:
+                username = s.login
+                password = s.password
+                if not password or not username:
+                    continue
                 settings = None
                 if "login_required" in s.error_message.lower() or "please wait a few minutes" in s.error_message.lower():
                     print(s)
@@ -114,7 +118,7 @@ def update():
                     cl = Client(
                         proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
                     )
-                    cl.login(s.login, s.password)
+                    cl.login(username=username, password=password, relogin=True)
                     settings = cl.settings
                     settings["authorization_data"] = cl.authorization_data
                     settings["cookies"] = {
