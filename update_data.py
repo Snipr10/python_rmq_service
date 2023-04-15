@@ -110,7 +110,7 @@ def update():
         for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
             try:
                 settings = None
-                if "login_required" in s.error_message.lower() or "Please wait a few minutes" in s.error_message.lower():
+                if "login_required" in s.error_message.lower() or "please wait a few minutes" in s.error_message.lower():
                     print(s)
                     proxy = AllProxy.objects.filter(
                         port__in=[30001, 30010, 30010]
