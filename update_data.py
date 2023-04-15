@@ -3,7 +3,6 @@ import os
 import random
 import time
 from django.db.models import Q
-from instagrapi import Client
 
 
 def update_while():
@@ -132,7 +131,6 @@ def update():
                         return False
 
                     cl.challenge_code_handler = challenge_code_handler
-
                     cl.login(username=username, password=password, relogin=True)
                     settings = cl.settings
                     settings["authorization_data"] = cl.authorization_data
