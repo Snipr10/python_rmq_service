@@ -115,9 +115,23 @@ def update():
                     proxy = AllProxy.objects.filter(
                         port__in=[30001, 30010, 30010]
                     ).order_by('?').first()
+                    from instagrapi import Client
+
                     cl = Client(
                         proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
+                        settings={}
                     )
+                    print(cl)
+                    def challenge_code_handler(username, choice):
+                        from instagrapi.mixins.challenge import ChallengeChoice
+                        if choice == ChallengeChoice.SMS:
+                            return None
+                        elif choice == ChallengeChoice.EMAIL:
+                            return None
+                        return False
+
+                    cl.challenge_code_handler = challenge_code_handler
+
                     cl.login(username=username, password=password, relogin=True)
                     settings = cl.settings
                     settings["authorization_data"] = cl.authorization_data
