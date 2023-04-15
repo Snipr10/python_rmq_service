@@ -97,11 +97,6 @@ def update():
                     s.settings = s.old_settings
                     s.proxy_id = proxies_select.order_by('?').first()
                     s.save()
-                elif s.proxy_id is None:
-                    s.settings = s.old_settings
-                    s.error_message = ""
-                    s.proxy_id = proxies_select.order_by('?').first()
-                    s.save()
             except Exception:
                 pass
     except Exception:
