@@ -120,7 +120,7 @@ def update():
                     cl = Client(
                         proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
                         settings={}
-                    )
+                    ).login(username=username, password=password, relogin=True)
                     print(cl)
                     def challenge_code_handler(username, choice):
                         from instagrapi.mixins.challenge import ChallengeChoice
