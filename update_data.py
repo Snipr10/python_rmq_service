@@ -110,7 +110,7 @@ def update():
         for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
             try:
                 settings = None
-                if "login_required" in s.error_message.lower():
+                if "login_required" in s.error_message.lower() or "Please wait a few minutes" in s.error_message.lower():
                     print(s)
                     proxy = AllProxy.objects.filter(
                         port__in=[30001, 30010, 30010]
@@ -154,6 +154,15 @@ def update():
         from django.db import connection
         cursor = connection.cursor()
         cursor.execute('''UPDATE prsr_parser_keywords SET last_modified = "2000-01-01 01:01:02" WHERE network_id = 7 AND last_modified < "2000-01-01 01:01:01"''')
+    except Exception as e:
+        print(e)
+    try:
+        proxies_select = AllProxy.objects.filter(
+            port__in=[30001, 30010, 30010]
+        )
+        for s in Sessions.objects.filter(proxy_id__isnull=True):
+            s.proxy_id = proxies_select.order_by('?').first()
+            s.save(update_fields=["proxy_id"])
     except Exception as e:
         print(e)
 
