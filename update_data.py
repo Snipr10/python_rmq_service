@@ -102,7 +102,7 @@ def update():
     except Exception:
         pass
     try:
-        for s in Sessions.objects.filter( settings__isnull=True, old_settings__isnull=False):
+        for s in Sessions.objects.filter(settings__isnull=True):
             try:
                 username = s.login
                 password = s.password
