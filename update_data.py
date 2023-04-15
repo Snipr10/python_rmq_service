@@ -116,7 +116,7 @@ def update():
                     ).order_by('?').first()
                     from instagrapi import Client
                     print("cl")
-
+                    print(type(cl))
                     cl = Client(
                         proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
                         settings={}
