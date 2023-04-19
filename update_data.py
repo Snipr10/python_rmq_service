@@ -136,8 +136,12 @@ def update():
                         "sessionid": cl.authorization_data["sessionid"]
                     }
                     s.settings = settings
-                    s.proxy_id = proxy.id
-                    s.error_message = ""
+                    s.old_settings = settings
+                    try:
+                        s.proxy_id = proxy.id
+                        s.error_message = ""
+                    except Exception:
+                        pass
                     s.save()
                     print(f"save {s}")
             except Exception as e:
