@@ -94,6 +94,7 @@ def add_sessions():
                         sessions_id.append(session)
                     except Exception as e:
                         session.proxy_id = None
+                        session.error_message = str(e)
                         session.save()
                 Sessions.objects.bulk_update(sessions_id, ['taken', 'start_parsing'],
                                              batch_size=200)
