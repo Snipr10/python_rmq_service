@@ -137,9 +137,9 @@ def update():
                     }
                     s.settings = settings
                     s.old_settings = settings
+                    s.error_message = "new"
                     try:
                         s.proxy_id = proxy.id
-                        s.error_message = ""
                     except Exception:
                         pass
                     s.save()
