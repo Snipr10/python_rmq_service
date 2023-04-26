@@ -99,6 +99,18 @@ def update():
                     s.save()
             except Exception:
                 pass
+        all_proxy = AllProxy.objects.filter()
+        all_proxy_ids = all_proxy.values_list('id', flat=True)
+        for s in Sessions.objects.filter(settings__isnull=False, old_settings__isnull=False):
+            try:
+                if s.proxy_id not in all_proxy_ids:
+                    try:
+                        AllProxy.objects.get(id=s.proxy_id)
+                    except Exception:
+                        s.proxy_id = proxies_select.order_by('?').first()
+                        s.save()
+            except Exception:
+                pass
     except Exception:
         pass
     try:
