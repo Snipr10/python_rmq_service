@@ -96,6 +96,7 @@ def update():
                     s.error_message = ""
                     s.settings = s.old_settings
                     s.proxy_id = proxies_select.order_by('?').first()
+                    s.is_active = 1
                     s.save()
             except Exception:
                 pass
@@ -150,6 +151,7 @@ def update():
                     s.settings = settings
                     s.old_settings = settings
                     s.error_message = "new"
+                    s.is_active = 1
                     try:
                         s.proxy_id = proxy.id
                     except Exception:
