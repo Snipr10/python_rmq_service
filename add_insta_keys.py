@@ -71,7 +71,7 @@ def add_keys():
                                                                      minutes=60)
                                                                  ).values_list('id', flat=True))
 
-                source_special = SourcesSpecial.objects.all(keyword_id__in=last_hour_keys_ids)
+                source_special = SourcesSpecial.objects.filter(keyword_id__in=last_hour_keys_ids)
                 if len(source_special) == 0:
 
                     key_source = KeywordSource.objects.filter(
