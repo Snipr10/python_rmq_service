@@ -35,7 +35,7 @@ def add_keys():
     import pymysql
 
     pymysql.install_as_MySQLdb()
-    from core.models import Sources, KeywordSource, Keyword
+    from core.models import Sources, KeywordSource, Keyword, SourcesSpecial
     from django.forms.models import model_to_dict
 
     channel = get_chanel()
@@ -47,8 +47,8 @@ def add_keys():
             django.db.close_old_connections()
 
             for k in Keyword.objects.filter(network_id=7, disabled=0,
-                                                   last_modified__gte=datetime.date(1999, 1, 1),
-                                                   ):
+                                            last_modified__gte=datetime.date(1999, 1, 1),
+                                            ):
                 if len(k.keyword) > 20 and len(k.keyword.split(" ")) >= 4:
                     print(k.keyword)
                     k.disabled = 1
@@ -66,18 +66,26 @@ def add_keys():
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
 
-                key_source = KeywordSource.objects.filter(
-                    source_id__in=list(select_sources.values_list('id', flat=True)))
-                #
-                # Keyword.objects.filter(network_id=7, enabled=1, taken=0,
-                #                        id__in=list(key_source.values_list('keyword_id', flat=True)),
-                #                        last_modified__isnull=True,
-                #                        ).update(last_modified=datetime.date(1999, 1, 1))
+                last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
+                                                                 last_modified__lte=datetime.datetime.now() - datetime.timedelta(
+                                                                     minutes=60)
+                                                                 ).values_list('source_item_id', flat=True))
 
-                key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
-                                                   id__in=list(key_source.values_list('keyword_id', flat=True)),
-                                                   last_modified__gte=datetime.date(1999, 1, 1),
-                                                   ).order_by('last_modified')
+                source_special = SourcesSpecial.objects.all(keyword_id__in=last_hour_keys_ids)
+                if len(source_special) == 0:
+
+                    key_source = KeywordSource.objects.filter(
+                        source_id__in=list(select_sources.values_list('id', flat=True)))
+
+                    key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
+                                                       id__in=list(key_source.values_list('keyword_id', flat=True)),
+                                                       last_modified__gte=datetime.date(1999, 1, 1),
+                                                       ).order_by('last_modified')
+                else:
+                    key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
+                                                       id__in=list(source_special.values_list('keyword_id', flat=True)),
+                                                       last_modified__gte=datetime.date(1999, 1, 1),
+                                                       ).order_by('last_modified')
 
                 if len(key_words) == 0:
                     time.sleep(5 * 60)

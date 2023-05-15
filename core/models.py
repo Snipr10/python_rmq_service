@@ -116,6 +116,15 @@ class KeywordSource(models.Model):
         db_table = 'prsr_parser_source_keywords'
 
 
+class SourcesSpecial(models.Model):
+    source_id = models.IntegerField()
+    keyword_id = models.IntegerField()
+    source_item_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'prsr_parser_source_special'
+
+
 class AllProxy(models.Model):
     ip = models.CharField(max_length=256)
     port = models.IntegerField()
