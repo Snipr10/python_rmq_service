@@ -69,7 +69,7 @@ def add_keys():
                 last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
                                                                  last_modified__lte=datetime.datetime.now() - datetime.timedelta(
                                                                      minutes=60)
-                                                                 ).values_list('source_item_id', flat=True))
+                                                                 ).values_list('id', flat=True))
 
                 source_special = SourcesSpecial.objects.all(keyword_id__in=last_hour_keys_ids)
                 if len(source_special) == 0:
