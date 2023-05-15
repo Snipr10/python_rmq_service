@@ -92,7 +92,7 @@ def add_keys():
                     continue
                 key_words_ids = []
                 print(f"key_words {key_words}")
-                for key_word in key_words[:100]:
+                for key_word in key_words[:10]:
                     body = model_to_dict(key_word)
                     try:
                         if body['created_date']:
