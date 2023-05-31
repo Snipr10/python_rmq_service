@@ -13,8 +13,8 @@ from update_data import update_while
 
 if __name__ == '__main__':
     #
-    # print("update_while")
-    # threading.Thread(target=update_while, args=()).start()
+    print("update_while")
+    threading.Thread(target=update_while, args=()).start()
 
     print("add_keys")
     threading.Thread(target=add_keys_while, args=()).start()
@@ -22,8 +22,8 @@ if __name__ == '__main__':
     print("add_sessions")
     threading.Thread(target=add_sessions_while, args=()).start()
 
-    # print("add_tasks")
-    # threading.Thread(target=add_tasks_while, args=()).start()
+    print("add_tasks")
+    threading.Thread(target=add_tasks_while, args=()).start()
 
     print("read_keys")
     threading.Thread(target=read_keys_while, args=()).start()
@@ -31,11 +31,11 @@ if __name__ == '__main__':
     print("read_sessions")
     threading.Thread(target=read_sessions_while, args=()).start()
 
-    # print("read_tasks")
-    # threading.Thread(target=read_tasks_while, args=()).start()
+    print("read_tasks")
+    threading.Thread(target=read_tasks_while, args=()).start()
 
     print("read_reslut_while")
     threading.Thread(target=read_reslut_while, args=()).start()
 
-    # print("update_session_id_while")
-    # threading.Thread(target=update_session_id_while, args=()).start()
+    print("update_session_id_while")
+    threading.Thread(target=update_session_id_while, args=()).start()
