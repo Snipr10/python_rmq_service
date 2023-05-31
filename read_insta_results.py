@@ -62,6 +62,7 @@ def read_tasks():
                         )
                     )
                     post_id = r.get("pk")
+                    print(f"post id {post_id}")
                     post_sphinx_id = get_sphinx_id(r.get("code"))
 
                     post.append(
