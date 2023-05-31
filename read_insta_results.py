@@ -45,66 +45,70 @@ def read_tasks():
 
     def callback(ch, method, properties, body):
         try:
+            django.db.close_old_connections()
             body = json.loads(body.decode("utf-8"))
             print(body)
             for r in body:
-                owner_id = r.get("user").get("pk")
-                owner_sphinx_id = get_sphinx_id(owner_id)
-                users.append(
-                    IgUser(
-                        id=owner_id,
-                        sphinx_id=owner_sphinx_id,
-                        name=r.get("user").get("full_name"),
-                        screen_name=r.get("user").get("username"),
-                        logo=r.get("user").get("profile_pic_url"),
+                try:
+                    owner_id = r.get("user").get("pk")
+                    owner_sphinx_id = get_sphinx_id(owner_id)
+                    users.append(
+                        IgUser(
+                            id=owner_id,
+                            sphinx_id=owner_sphinx_id,
+                            name=r.get("user").get("full_name"),
+                            screen_name=r.get("user").get("username"),
+                            logo=r.get("user").get("profile_pic_url"),
+                        )
                     )
-                )
-                post_id = r.get("pk")
-                post_sphinx_id = get_sphinx_id(r.get("code"))
+                    post_id = r.get("pk")
+                    post_sphinx_id = get_sphinx_id(r.get("code"))
 
-                post.append(
-                    IgPost(
-                        id=post_id,
-                        owner_id=owner_id,
-                        shortcode=r.get("code"),
-                        owner_sphinx_id=owner_sphinx_id,
-                        content=r.get("caption_text"),
-                        created_date=datetime.datetime.fromisoformat(r.get("taken_at")),
-                        comments=r.get("comment_count"),
-                        likes=r.get("like_count"),
-                        sphinx_id=post_sphinx_id,
-                        content_hash=get_md5_text(r.get("caption_text"))
+                    post.append(
+                        IgPost(
+                            id=post_id,
+                            owner_id=owner_id,
+                            shortcode=r.get("code"),
+                            owner_sphinx_id=owner_sphinx_id,
+                            content=r.get("caption_text"),
+                            created_date=datetime.datetime.fromisoformat(r.get("taken_at")),
+                            comments=r.get("comment_count"),
+                            likes=r.get("like_count"),
+                            sphinx_id=post_sphinx_id,
+                            content_hash=get_md5_text(r.get("caption_text"))
+                        )
                     )
-                )
-                sphinx_ids.append(post_sphinx_id)
-                media.append(
-                    IgMedia(
-                        id=post_id,
-                        url=r.get("thumbnail_url"),
+                    sphinx_ids.append(post_sphinx_id)
+                    media.append(
+                        IgMedia(
+                            id=post_id,
+                            url=r.get("thumbnail_url"),
+                        )
                     )
-                )
-                update_sphinx.append(UpdateIndex(id=post_id, network_id=7, sphinx_id=post_sphinx_id))
-                if len(post) > 10:
-                    django.db.close_old_connections()
-                    try:
-                        IgUser.objects.bulk_create(users, batch_size=200, ignore_conflicts=True)
-                    except Exception as e:
-                        print(f"IgUser: {e}")
-                    try:
-                        IgPost.objects.bulk_update(post, ['last_modified'], batch_size=200)
-                        users.clear()
-                    except Exception as e:
-                        print(f"IgUser: {e}")
-                    try:
-                        IgPost.objects.bulk_create(post, batch_size=200, ignore_conflicts=True)
-                        post.clear()
-                    except Exception as e:
-                        print(f"IgPost: {e}")
-                    try:
-                        IgMedia.objects.bulk_create(media, batch_size=200, ignore_conflicts=True)
-                        media.clear()
-                    except Exception as e:
-                        print(f"IgMedia: {e}")
+                    update_sphinx.append(UpdateIndex(id=post_id, network_id=7, sphinx_id=post_sphinx_id))
+                    if len(post) > 10:
+                        django.db.close_old_connections()
+                        try:
+                            IgUser.objects.bulk_create(users, batch_size=200, ignore_conflicts=True)
+                        except Exception as e:
+                            print(f"IgUser: {e}")
+                        try:
+                            IgPost.objects.bulk_update(post, ['last_modified'], batch_size=200)
+                            users.clear()
+                        except Exception as e:
+                            print(f"IgUser: {e}")
+                        try:
+                            IgPost.objects.bulk_create(post, batch_size=200, ignore_conflicts=True)
+                            post.clear()
+                        except Exception as e:
+                            print(f"IgPost: {e}")
+                        try:
+                            IgMedia.objects.bulk_create(media, batch_size=200, ignore_conflicts=True)
+                            media.clear()
+                        except Exception as e:
+                            print(f"IgMedia: {e}")
+                except Exception as e:
+                    print(f"insta_key_result{e}")
         except Exception as e:
             print(f"callback{e}")
             django.db.close_old_connections()
