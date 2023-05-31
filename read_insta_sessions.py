@@ -46,7 +46,6 @@ def read_sessions():
     def callback(ch, method, properties, body):
         try:
             body = json.loads(body.decode("utf-8"))
-            print(body)
             try:
                 error_message= body.get("error_message", "")
             except Exception:

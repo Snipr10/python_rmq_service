@@ -42,7 +42,6 @@ def read_keys():
     def callback(ch, method, properties, body):
         try:
             body = json.loads(body.decode("utf-8"))
-            print(body)
             result.append(
                 Keyword(
                     id=body.get("id"),

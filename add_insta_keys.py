@@ -91,7 +91,6 @@ def add_keys():
                     time.sleep(5 * 60)
                     continue
                 key_words_ids = []
-                print(f"key_words {key_words}")
                 for key_word in key_words[:10]:
                     body = model_to_dict(key_word)
                     try:
