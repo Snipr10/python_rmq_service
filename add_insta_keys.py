@@ -66,7 +66,7 @@ def add_keys():
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
 
-                last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
+                last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, enabled=1, disabled=0,
                                                                  last_modified__lte=datetime.datetime.now() - datetime.timedelta(
                                                                      minutes=60)
                                                                  ).values_list('id', flat=True))
