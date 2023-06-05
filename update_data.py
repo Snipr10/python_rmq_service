@@ -14,7 +14,7 @@ def update_while():
         except Exception as e:
             print(f"update_while {e}")
             time.sleep(10)
-        time.sleep(15 * 60)
+        time.sleep(5 * 60)
 
 
 def update():
