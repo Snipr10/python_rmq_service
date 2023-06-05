@@ -97,6 +97,13 @@ def read_sessions():
                 print(f"is_active {result_ban_ids}")
 
                 Sessions.objects.filter(id__in=result_ban_ids).update(is_active=F('is_active') + 1)
+                for s in Sessions.objects.filter(id__in=result_ban_ids):
+                    try:
+                        s.active += 1
+                        s.save(update_fields=["active"])
+                        print(f"update {s.id}")
+                    except Exception:
+                        pass
                 result_ban_ids.clear()
                 result_ban.clear()
         except Exception as e:
