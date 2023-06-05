@@ -100,7 +100,7 @@ def read_sessions():
                 # Sessions.objects.filter(id__in=result_ban_ids).update(is_active=F('is_active') + 1)
                 for s in Sessions.objects.filter(id__in=result_ban_ids):
                     try:
-                        s.active += 1
+                        s.is_active += 1
                         s.save(update_fields=["active"])
                         print(f"update {s.id}")
                     except Exception:
