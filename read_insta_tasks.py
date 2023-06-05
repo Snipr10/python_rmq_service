@@ -6,7 +6,7 @@ import time
 
 import django.db
 
-from utils import get_chanel
+from utils import get_chanel, update_time_timezone
 
 
 def read_tasks_while():
@@ -46,7 +46,7 @@ def read_tasks():
             result.append(
                 SourcesItems(
                     id=body.get("id"),
-                    last_modified=datetime.datetime.fromisoformat(body.get("last_modified")),
+                    last_modified=update_time_timezone(datetime.datetime.fromisoformat(body.get("last_modified"))),
                     taken=0,
                     disabled=body.get("disabled", 0)
                 )
