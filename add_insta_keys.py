@@ -88,9 +88,15 @@ def add_keys():
                                                        ).order_by('last_modified')
 
                 if len(key_words) == 0:
-                    time.sleep(5 * 60)
+                    time.sleep(1 * 60)
                     continue
+                elif len(key_words) < 5:
+                    key_words = list(key_words)
+                    key_words.extend(key_words)
+                    key_words.extend(key_words)
+
                 key_words_ids = []
+
                 for key_word in key_words[:10]:
                     body = model_to_dict(key_word)
                     try:
