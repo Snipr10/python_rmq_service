@@ -94,7 +94,7 @@ def read_sessions():
             if len(result_ban) > 0:
                 django.db.close_old_connections()
                 Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken', 'session_id',  'error_message', 'settings'], batch_size=200)
-                print(f"is_active {result_ban_ids}")
+                print(f"is_active {result_ban_ids} {Sessions.objects.filter(id__in=result_ban_ids)}")
 
                 # Sessions.objects.filter(id__in=result_ban_ids).update(is_active=F('is_active') + 1)
                 for s in Sessions.objects.filter(id__in=result_ban_ids):
