@@ -51,6 +51,7 @@ def read_sessions():
             except Exception:
                 error_message = ""
             if body.get("banned"):
+                print(f'''session id  {body.get("id")} {body.get("banned")}''')
                 result_ban.append(
                     Sessions(
                         id=body.get("id"),
@@ -93,11 +94,13 @@ def read_sessions():
             if len(result_ban) > 0:
                 django.db.close_old_connections()
                 Sessions.objects.bulk_update(result_ban, ['last_parsing', 'taken', 'session_id',  'error_message', 'settings'], batch_size=200)
+                print(f"is_active {result_ban_ids}")
+
                 Sessions.objects.filter(id__in=result_ban_ids).update(is_active=F('is_active') + 1)
                 result_ban_ids.clear()
                 result_ban.clear()
         except Exception as e:
-            print(f"callback{e}")
+            print(f"callback sessions {e}")
             django.db.close_old_connections()
 
     channel.basic_consume(queue='insta_source_ig_session_parse', on_message_callback=callback, auto_ack=True)
