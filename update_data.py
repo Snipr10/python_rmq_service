@@ -114,59 +114,59 @@ def update():
                 pass
     except Exception:
         pass
-    try:
-        for s in Sessions.objects.filter(settings__isnull=True):
-            try:
-                username = s.login
-                password = s.password
-                if not password or not username:
-                    continue
-                settings = None
-                if "login_required" in s.error_message.lower() or "please wait a few minutes" in s.error_message.lower():
-                    proxy = AllProxy.objects.filter(
-                        port__in=[30001, 30010, 30011]
-                    ).order_by('?').first()
-
-                    cl = Client(
-                        proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
-                        settings={}
-                    )
-
-                    def challenge_code_handler(username, choice):
-                        from instagrapi.mixins.challenge import ChallengeChoice
-                        if choice == ChallengeChoice.SMS:
-                            return None
-                        elif choice == ChallengeChoice.EMAIL:
-                            return None
-                        return False
-
-                    cl.challenge_code_handler = challenge_code_handler
-
-                    cl.login(username=username, password=password, relogin=True)
-                    settings = cl.settings
-                    settings["authorization_data"] = cl.authorization_data
-                    settings["cookies"] = {
-                        "sessionid": cl.authorization_data["sessionid"]
-                    }
-                    s.settings = settings
-                    s.old_settings = settings
-                    s.error_message = "new"
-                    s.is_active = 1
-                    try:
-                        s.proxy_id = proxy.id
-                    except Exception:
-                        pass
-                    s.save()
-                    print(f"save {s}")
-            except Exception as e:
-                try:
-                    s.error_message = e
-                    s.save()
-                except Exception:
-                    pass
-                print(f"login_required {e}")
-    except Exception as e:
-        print(f"proxy banned {e}")
+    # try:
+    #     for s in Sessions.objects.filter(settings__isnull=True):
+    #         try:
+    #             username = s.login
+    #             password = s.password
+    #             if not password or not username:
+    #                 continue
+    #             settings = None
+    #             if "login_required" in s.error_message.lower() or "please wait a few minutes" in s.error_message.lower():
+    #                 proxy = AllProxy.objects.filter(
+    #                     port__in=[30001, 30010, 30011]
+    #                 ).order_by('?').first()
+    #
+    #                 cl = Client(
+    #                     proxy=f"http://{proxy.login}:{proxy.proxy_password}@{proxy.ip}:{proxy.port}",
+    #                     settings={}
+    #                 )
+    #
+    #                 def challenge_code_handler(username, choice):
+    #                     from instagrapi.mixins.challenge import ChallengeChoice
+    #                     if choice == ChallengeChoice.SMS:
+    #                         return None
+    #                     elif choice == ChallengeChoice.EMAIL:
+    #                         return None
+    #                     return False
+    #
+    #                 cl.challenge_code_handler = challenge_code_handler
+    #
+    #                 cl.login(username=username, password=password, relogin=True)
+    #                 settings = cl.settings
+    #                 settings["authorization_data"] = cl.authorization_data
+    #                 settings["cookies"] = {
+    #                     "sessionid": cl.authorization_data["sessionid"]
+    #                 }
+    #                 s.settings = settings
+    #                 s.old_settings = settings
+    #                 s.error_message = "new"
+    #                 s.is_active = 1
+    #                 try:
+    #                     s.proxy_id = proxy.id
+    #                 except Exception:
+    #                     pass
+    #                 s.save()
+    #                 print(f"save {s}")
+    #         except Exception as e:
+    #             try:
+    #                 s.error_message = e
+    #                 s.save()
+    #             except Exception:
+    #                 pass
+    #             print(f"login_required {e}")
+    # except Exception as e:
+    #     print(f"proxy banned {e}")
     try:
         SourcesItems.objects.filter(network_id=7, disabled=0, last_modified__isnull=True).update(
             last_modified=datetime.datetime(2000, 1, 1))
