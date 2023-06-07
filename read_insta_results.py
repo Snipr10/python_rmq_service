@@ -94,7 +94,7 @@ def read_tasks():
                         except Exception as e:
                             print(f"IgUser: {e}")
                         try:
-                            IgPost.objects.bulk_update(post, ['last_modified'], batch_size=200)
+                            IgPost.objects.bulk_update(post, ['last_modified', 'comments', 'likes', 'created_date'], batch_size=200)
                             users.clear()
                         except Exception as e:
                             print(f"IgUser: {e}")
