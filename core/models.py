@@ -209,7 +209,7 @@ class IgPost(models.Model):
     shortcode = models.CharField(max_length=255, null=True, blank=True)
     owner_sphinx_id = models.IntegerField(default=0)
     content = models.CharField(max_length=4096, null=True, blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField()
     comments = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     sphinx_id = models.IntegerField()
