@@ -51,6 +51,7 @@ def get_proxy():
                 IgProxyBanned.objects.create(proxy_id=can.id)
                 print(f"{ig_proxy_count} {e}")
             print(f"Proxy count {ig_proxy_count}")
+            print(can)
         except Exception as e:
             print(f"{proxy_str} {e}")
 
