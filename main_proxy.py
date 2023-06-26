@@ -45,3 +45,6 @@ def get_proxy():
             print(f"Proxy count {ig_proxy_count}")
         except Exception as e:
             print(f"{proxy_str} {e}")
+
+if __name__ == "__main__":
+    get_proxy()
