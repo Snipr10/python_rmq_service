@@ -26,7 +26,7 @@ def get_proxy():
     django.db.close_old_connections()
 
 
-    proxy_candidates = AllProxy.objects.filter(v6=0).exclude(id__in=IgProxyBanned.objects.all().values_list('proxy_id', flat=True))
+    proxy_candidates = AllProxy.objects.filter().exclude(id__in=IgProxyBanned.objects.all().values_list('proxy_id', flat=True))
     print(proxy_candidates)
     ig_proxy_count = 0
     fb_proxy_count = 0
