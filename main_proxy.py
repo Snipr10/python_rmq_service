@@ -1,3 +1,7 @@
+import os
+import random
+import requests
+
 def get_proxy():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
     try:
