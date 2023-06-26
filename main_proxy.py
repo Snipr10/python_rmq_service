@@ -26,7 +26,7 @@ def get_proxy():
     django.db.close_old_connections()
 
 
-    proxy_candidates = AllProxy.objects.filter(v6=0)
+    proxy_candidates = AllProxy.objects.filter(v6=0).exclude(id__in=IgProxyBanned.objects.all().values_list('proxy_id', flat=True))
     ig_proxy_count = 0
     fb_proxy_count = 0
 
@@ -44,7 +44,10 @@ def get_proxy():
             try:
                 if requests.get("https://www.instagram.com", proxies=proxies, timeout=10).ok:
                     ig_proxy_count += 1
+                else:
+                    raise Exception("not ok")
             except Exception as e:
+                IgProxyBanned.objects.create(proxy_id=can.id)
                 print(f"{ig_proxy_count} {e}")
             print(f"Proxy count {ig_proxy_count}")
         except Exception as e:
