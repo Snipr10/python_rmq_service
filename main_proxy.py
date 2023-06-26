@@ -27,6 +27,7 @@ def get_proxy():
 
 
     proxy_candidates = AllProxy.objects.filter(v6=0).exclude(id__in=IgProxyBanned.objects.all().values_list('proxy_id', flat=True))
+    print(proxy_candidates)
     ig_proxy_count = 0
     fb_proxy_count = 0
 
