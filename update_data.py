@@ -41,15 +41,17 @@ def update():
     from core.models import Sessions, Keyword, SourcesItems, Sources, KeywordSource, AllProxy, IgProxyBanned
     django.db.close_old_connections()
     try:
+        print("Keyword")
         Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
     except Exception as e:
         print(f"Keyword update {e}")
     try:
+        print("SourcesItems")
         SourcesItems.objects.filter(taken=1, network_id=7).update(taken=0)
     except Exception as e:
         print(f"SourcesItems update {e}")
     try:
-
+        print("Sessions")
         Sessions.objects.filter(is_active__lte=10, taken=1).update(
             taken=0,
             start_parsing=update_time_timezone(timezone.localtime()),
@@ -58,6 +60,7 @@ def update():
     except Exception as e:
         print(f"Sessions update {e}")
     try:
+        print("select_sources")
         select_sources = Sources.objects.filter(published=1, status=1)
 
         key_source = KeywordSource.objects.filter(
@@ -68,6 +71,7 @@ def update():
     except Exception as e:
         print(f"key_source update {e}")
     try:
+        print("select_sources")
         select_sources = Sources.objects.filter(published=1,
                                                 status=1)
         sources_items = SourcesItems.objects.filter(network_id=7,
@@ -80,6 +84,7 @@ def update():
     except Exception as e:
         print(f"sources_items update {e}")
     try:
+        print("proxies_select")
 
         proxies_select = AllProxy.objects.filter(Q(
             port__in=[30001, 30010, 30011, 8000]) | Q(login="sega364pd")
