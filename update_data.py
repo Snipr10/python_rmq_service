@@ -5,7 +5,7 @@ import time
 from django.db.models import Q
 from instagrapi import Client
 import random
-
+import requests
 
 def update_while():
     while True:
