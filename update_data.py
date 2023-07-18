@@ -4,6 +4,7 @@ import random
 import time
 from django.db.models import Q
 from instagrapi import Client
+import random
 
 
 def update_while():
@@ -81,22 +82,39 @@ def update():
     try:
 
         proxies_select = AllProxy.objects.filter(Q(
-            port__in=[30001, 30010, 30011]) | Q(login="sega364pd")
+            port__in=[30001, 30010, 30011, 8000]) | Q(login="sega364pd")
         # ).exclude(
         #     id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
         ).values_list('id', flat=True)
+        proxies_ig_ids = []
+        for can in proxy_candidates:
+            proxy_str = ""
+            try:
+                proxy_str = f"{can.login}:{can.proxy_password}@{can.ip}:{can.port}"
+                proxies = {'https': f'http://{proxy_str}'}
+                try:
+                    if requests.get("https://www.instagram.com", proxies=proxies, timeout=10).ok:
+                        proxies_ig_ids.append(can.id)
+                except Exception as e:
+                    print(f"{e}")
+
+            except Exception as e:
+                print(f"{proxy_str} {e}")
+
         for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
             try:
-
-                if "proxy" in s.error_message.lower() or "connect" in s.error_message.lower() or "500" in s.error_message.lower():
+                if s.is_active > 15:
+                    continue
+                if True:
+                    # if "proxy" in s.error_message.lower() or "connect" in s.error_message.lower() or "500" in s.error_message.lower():
                     try:
                         IgProxyBanned.objects.create(proxy_id=s.proxy_id)
                     except Exception:
                         pass
                     s.error_message = ""
                     s.settings = s.old_settings
-                    s.proxy_id = proxies_select.order_by('?').first()
-                    s.is_active = 1
+                    s.proxy_id = random.choice(proxies_ig_ids)
+                    s.is_active += 1
                     s.save()
             except Exception:
                 pass
