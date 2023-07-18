@@ -90,9 +90,9 @@ def update():
             port__in=[30001, 30010, 30011, 8000]) | Q(login="sega364pd")
         # ).exclude(
         #     id__in=IgProxyBanned.objects.all().values_list('id', flat=True)
-        ).values_list('id', flat=True)
+                                                 )
         proxies_ig_ids = []
-        for can in proxy_candidates:
+        for can in proxies_select:
             proxy_str = ""
             try:
                 proxy_str = f"{can.login}:{can.proxy_password}@{can.ip}:{can.port}"
@@ -105,6 +105,7 @@ def update():
 
             except Exception as e:
                 print(f"{proxy_str} {e}")
+        print("proxies_select")
 
         for s in Sessions.objects.filter(settings__isnull=True, old_settings__isnull=False):
             try:
