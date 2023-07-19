@@ -95,7 +95,11 @@ def add_sessions():
                         print(5)
 
                         if body.get("settings"):
-                            body['settings'] = ast.literal_eval(body.get("settings"))
+                            try:
+                                body['settings'] = ast.literal_eval(body.get("settings"))
+                            except Exception:
+                                body['settings'] = json.loads(body.get("settings"))
+
                         print(6)
 
                         channel.basic_publish(exchange='',
@@ -105,6 +109,7 @@ def add_sessions():
                         session.start_parsing = update_time_timezone(timezone.localtime())
                         sessions_id.append(session)
                     except Exception as e:
+                        print(e)
                         session.error_message = f"proxy {session.proxy_id} {str(e)}"
                         session.proxy_id = None
                         session.save()
