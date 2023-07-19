@@ -42,7 +42,7 @@ def update():
     django.db.close_old_connections()
 
     i = 0
-    for s in Sessions.objects.filter(is_active__lte=19).exclude(error_message="ok").order_by("-id"):
+    for s in Sessions.objects.filter(is_active__lte=19).order_by("-id"):
         eror = "not ok"
         i += 1
         print(i)
@@ -70,7 +70,15 @@ def update():
                     )
                     cl.challenge_code_handler = challenge_code_handler
 
-                    print(cl.user_id_from_username('anya_grad'))
+                    message = cl.private.get(
+                        'https://i.instagram.com/api/v1/fbsearch/search_engine_result_page/',
+                        params={'query': "бассейн", 'next_max_id': None},
+                        proxies=cl.private.proxies
+                    ).json().get('message')
+
+                    if message is not None:
+                        raise Exception(message)
+
                     s.error_message = "ok"
                     settings = cl.get_settings()
                     settings["authorization_data"] = cl.authorization_data
@@ -94,7 +102,14 @@ def update():
                 cl.challenge_code_handler = challenge_code_handler
                 cl.login_by_sessionid(
                     s.old_session_id)
-                print(cl.user_id_from_username('anya_grad'))
+                message = cl.private.get(
+                    'https://i.instagram.com/api/v1/fbsearch/search_engine_result_page/',
+                    params={'query': "бассейн", 'next_max_id': None},
+                    proxies=cl.private.proxies
+                ).json().get('message')
+
+                if message is not None:
+                    raise Exception(message)
 
                 settings = cl.get_settings()
                 settings["authorization_data"] = cl.authorization_data
@@ -118,7 +133,15 @@ def update():
                 )
                 cl.challenge_code_handler = challenge_code_handler
                 cl.login(s.login, s.password)
-                print(cl.user_id_from_username('anya_grad'))
+
+                message = cl.private.get(
+                    'https://i.instagram.com/api/v1/fbsearch/search_engine_result_page/',
+                    params={'query': "бассейн", 'next_max_id': None},
+                    proxies=cl.private.proxies
+                ).json().get('message')
+
+                if message is not None:
+                    raise Exception(message)
 
                 settings = cl.get_settings()
                 settings["authorization_data"] = cl.authorization_data
