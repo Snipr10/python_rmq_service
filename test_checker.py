@@ -59,7 +59,7 @@ def update():
                     s.error_message = "ok"
                     s.settings = s.old_settings
                     s.is_active = 1
-                    s.save()
+                    s.save(update_fields=["settings", "is_active", "error_message"])
                     continue
                 except Exception as e:
                     eror = str(e)
@@ -82,8 +82,9 @@ def update():
                 s.settings = settings
                 s.error_message = "ok"
                 s.old_settings = settings
+
                 s.is_active = 1
-                s.save()
+                s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
                 continue
             except Exception as e:
                 eror = str(e)
@@ -106,7 +107,7 @@ def update():
                 s.old_settings = settings
                 s.is_active = 1
                 s.error_message = "ok"
-                s.save()
+                s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
                 continue
             except Exception as e:
                 eror = str(e)
