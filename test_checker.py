@@ -89,6 +89,8 @@ def update():
                 )
                 cl.challenge_code_handler = challenge_code_handler
                 cl.login(s.login, s.password)
+                print(cl.user_id_from_username('anya_grad'))
+
                 settings = cl.get_settings()
                 settings["authorization_data"] = cl.authorization_data
                 settings["cookies"] = {
