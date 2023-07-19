@@ -51,15 +51,18 @@ def update():
             if "authorization_data" in str(s.old_settings):
                 try:
                     print("old_settings 2")
-
+                    print(s.old_session_id)
                     cl = Client(
                         proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
                         settings=s.old_settings
                     )
                     cl.challenge_code_handler = challenge_code_handler
+                    print("old_settings 3")
 
                     print(cl.user_id_from_username('anya_grad'))
                     s.error_message = "ok"
+                    print("old_settings 4")
+
                     s.settings = s.old_settings
                     s.is_active = 1
                     s.save(update_fields=["settings", "is_active", "error_message"])
