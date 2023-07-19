@@ -70,29 +70,24 @@ def add_sessions():
                 proxy_ids = []
                 for session in select_sessions[:100]:
                     proxy_ids.append(session.proxy_id)
+                print(select_sessions)
                 proxyies_select = AllProxy.objects.filter(id__in=proxy_ids)
                 sessions_id = []
                 for session in select_sessions[:100]:
                     try:
                         print(session.id)
-
                         body = model_to_dict(session)
-                        print(1)
                         if body['start_parsing']:
                             body['start_parsing'] = body['start_parsing'].isoformat()
-                        print(2)
 
                         if body['last_parsing']:
                             body['last_parsing'] = body['last_parsing'].isoformat()
-                        print(3)
 
                         proxy = proxyies_select.get(id=body['proxy_id'])
-                        print(4)
                         body['proxy_ip'] = proxy.ip
                         body['proxy_port'] = proxy.port
                         body['proxy_login'] = proxy.login
                         body['proxy_pass'] = proxy.proxy_password
-                        print(5)
 
                         if body.get("settings"):
                             try:
@@ -100,7 +95,6 @@ def add_sessions():
                             except Exception:
                                 body['settings'] = json.loads(body.get("settings"))
 
-                        print(6)
 
                         channel.basic_publish(exchange='',
                                               routing_key='insta_source_ig_session_new',
