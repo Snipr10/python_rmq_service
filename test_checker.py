@@ -53,13 +53,13 @@ def update():
                 try:
                     sessings_cook = s.old_settings
                     try:
-                        sessings_cook = json.loads(s.old_settings)
+                        sessings_cook = json.loads(str(s.old_settings))
                     except Exception  as e:
-                        print(f"sessings_cook {e}")
+                        print(f"sessings_cook 1 {e}")
                         try:
-                            sessings_cook = json.loads(s.old_settings.replace("'", '"'))
+                            sessings_cook = json.loads(str(s.old_settings.replace("'", '"')))
                         except Exception as e:
-                            print(f"sessings_cook2 {e}")
+                            print(f"sessings_cook 2 {e}")
 
                     cl = Client(
                         proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
