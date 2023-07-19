@@ -41,10 +41,11 @@ def update():
     django.db.close_old_connections()
 
     i = 0
-    for s in Sessions.objects.filter().order_by("-id"):
+    for s in Sessions.objects.filter(is_active__lte=19).order_by("-id"):
         eror = "not ok"
         i += 1
         print(i)
+        print(s.id)
         if s.old_settings is not None:
             if "authorization_data" in s.old_settings:
                 try:
