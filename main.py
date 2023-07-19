@@ -13,8 +13,7 @@ from update_data import update_while
 
 
 if __name__ == '__main__':
-    print("update_while_session")
-    threading.Thread(target=update_while_session, args=()).start()
+
     print("update_while")
     threading.Thread(target=update_while, args=()).start()
     #
@@ -41,3 +40,5 @@ if __name__ == '__main__':
 
     print("update_session_id_while")
     # threading.Thread(target=update_session_id_while, args=()).start()
+    print("update_while_session")
+    threading.Thread(target=update_while_session, args=()).start()
