@@ -89,3 +89,5 @@ def update():
                                     print(f"login {e}")
                                     s.is_active = 20
                                     s.save()
+
+update()
