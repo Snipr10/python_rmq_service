@@ -42,7 +42,7 @@ def update():
 
     i = 0
     for s in Sessions.objects.filter():
-        e = "ok ok ok"
+        e = "not ok"
         i += 1
         print(i)
         if s.old_settings is not None:
