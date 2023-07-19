@@ -104,7 +104,11 @@ def update():
             except Exception as e:
                 print(f"login {e}")
                 s.is_active = 20
+                s.settings = None
+
                 s.save()
+        s.settings = None
+
         s.is_active = 20
         s.save()
 
