@@ -70,6 +70,7 @@ def read_sessions():
                         last_parsing=update_time_timezone(datetime.datetime.fromisoformat(body.get("last_parsing"))),
                         taken=0,
                         settings=body.get("settings"),
+                        #                         settings=json.loads(body.get("settings")),
                         session_id=body.get("session_id"),
                         is_active=1,
                         error_message="ok",
