@@ -42,6 +42,7 @@ def update():
 
     i = 0
     for s in Sessions.objects.filter():
+        e = "ok ok ok"
         i += 1
         print(i)
         if s.old_settings is not None:
@@ -105,9 +106,10 @@ def update():
                 print(f"login {e}")
                 s.is_active = 20
                 s.settings = None
-
+                s.error_message = str(e)
                 s.save()
         s.settings = None
+        s.error_message = str(e)
 
         s.is_active = 20
         s.save()
