@@ -7,6 +7,7 @@ from instagrapi import Client
 import random
 import requests
 
+
 def challenge_code_handler(username, choice):
     from instagrapi.mixins.challenge import ChallengeChoice
     if choice == ChallengeChoice.SMS:
@@ -14,6 +15,7 @@ def challenge_code_handler(username, choice):
     elif choice == ChallengeChoice.EMAIL:
         return None
     return False
+
 
 def update():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
@@ -38,9 +40,9 @@ def update():
     from core.models import Sessions, Keyword, SourcesItems, Sources, KeywordSource, AllProxy, IgProxyBanned
     django.db.close_old_connections()
 
-    i= 0
+    i = 0
     for s in Sessions.objects.filter():
-        i+=1
+        i += 1
         print(i)
         if s.old_settings is not None:
             if "authorization_data" in s.old_settings:
@@ -55,39 +57,54 @@ def update():
                     s.settings = s.old_settings
                     s.is_active = 1
                     s.save()
+                    continue
                 except Exception as e:
                     print(f"old_settings {e}")
-                    if s.old_session_id:
-                        try:
-                            cl = Client(
-                                proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
-                            )
-                            cl.challenge_code_handler = challenge_code_handler
-                            cl.login_by_sessionid(
-                                s.old_session_id)
-                            print(cl.user_id_from_username('anya_grad'))
+        if s.old_session_id:
+            try:
+                cl = Client(
+                    proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
+                )
+                cl.challenge_code_handler = challenge_code_handler
+                cl.login_by_sessionid(
+                    s.old_session_id)
+                print(cl.user_id_from_username('anya_grad'))
 
-                            settings = cl.get_settings()
-                            settings["authorization_data"] = cl.authorization_data
-                            settings["cookies"] = {
-                                "sessionid": cl.authorization_data["sessionid"]
-                            }
-                            s.settings = settings
-                            s.old_settings = settings
-                            s.is_active = 1
-                            s.save()
-                        except Exception as e:
-                            print(f"old_session_id {e}")
-                            if s.login is not None and s.password is not  None:
-                                try:
-                                    cl = Client(
-                                        proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
-                                    )
-                                    cl.challenge_code_handler = challenge_code_handler
-                                    cl.login(s.login, s.password)
-                                except Exception as e:
-                                    print(f"login {e}")
-                                    s.is_active = 20
-                                    s.save()
+                settings = cl.get_settings()
+                settings["authorization_data"] = cl.authorization_data
+                settings["cookies"] = {
+                    "sessionid": cl.authorization_data["sessionid"]
+                }
+                s.settings = settings
+                s.old_settings = settings
+                s.is_active = 1
+                s.save()
+                continue
+            except Exception as e:
+                print(f"old_session_id {e}")
+        if s.login is not None and s.password is not None:
+            try:
+                cl = Client(
+                    proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
+                )
+                cl.challenge_code_handler = challenge_code_handler
+                cl.login(s.login, s.password)
+                settings = cl.get_settings()
+                settings["authorization_data"] = cl.authorization_data
+                settings["cookies"] = {
+                    "sessionid": cl.authorization_data["sessionid"]
+                }
+                s.settings = settings
+                s.old_settings = settings
+                s.is_active = 1
+                s.save()
+                continue
+            except Exception as e:
+                print(f"login {e}")
+                s.is_active = 20
+                s.save()
+        s.is_active = 20
+        s.save()
+
 
 update()
