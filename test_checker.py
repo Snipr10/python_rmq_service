@@ -56,6 +56,7 @@ def update():
                     cl.challenge_code_handler = challenge_code_handler
 
                     print(cl.user_id_from_username('anya_grad'))
+                    s.error_message = "ok"
                     s.settings = s.old_settings
                     s.is_active = 1
                     s.save()
@@ -79,6 +80,7 @@ def update():
                     "sessionid": cl.authorization_data["sessionid"]
                 }
                 s.settings = settings
+                s.error_message = "ok"
                 s.old_settings = settings
                 s.is_active = 1
                 s.save()
@@ -103,6 +105,7 @@ def update():
                 s.settings = settings
                 s.old_settings = settings
                 s.is_active = 1
+                s.error_message = "ok"
                 s.save()
                 continue
             except Exception as e:
