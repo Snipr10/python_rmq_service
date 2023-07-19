@@ -42,7 +42,7 @@ def update():
     django.db.close_old_connections()
 
     i = 0
-    for s in Sessions.objects.filter(is_active__lte=19).exclude(error_message="ok"):
+    for s in Sessions.objects.filter(is_active__lte=19).exclude(error_message="ok").order_by("-id"):
         eror = "not ok"
         i += 1
         print(i)
