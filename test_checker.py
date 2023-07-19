@@ -47,7 +47,7 @@ def update():
         print(i)
         print(s.id)
         if s.old_settings is not None:
-            if "authorization_data" in s.old_settings:
+            if "authorization_data" in str(s.old_settings):
                 try:
                     cl = Client(
                         proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
