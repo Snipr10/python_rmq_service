@@ -47,8 +47,11 @@ def update():
         print(i)
         print(s.id)
         if s.old_settings is not None:
+            print("old_settings 1")
             if "authorization_data" in str(s.old_settings):
                 try:
+                    print("old_settings 2")
+
                     cl = Client(
                         proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
                         settings=s.old_settings
@@ -66,6 +69,8 @@ def update():
                     print(f"old_settings {e}")
         if s.old_session_id:
             try:
+                print("old_session_id 1")
+
                 cl = Client(
                     proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
                 )
