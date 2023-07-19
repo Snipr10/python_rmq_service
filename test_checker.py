@@ -60,8 +60,12 @@ def update():
 
                     print(cl.user_id_from_username('anya_grad'))
                     s.error_message = "ok"
-
-                    s.settings = json.loads(s.old_settings)
+                    settings = cl.get_settings()
+                    settings["authorization_data"] = cl.authorization_data
+                    settings["cookies"] = {
+                        "sessionid": cl.authorization_data["sessionid"]
+                    }
+                    s.settings = json.dumps(settings)
                     s.is_active = 1
                     s.save(update_fields=["settings", "is_active", "error_message"])
                     continue
@@ -85,9 +89,9 @@ def update():
                 settings["cookies"] = {
                     "sessionid": cl.authorization_data["sessionid"]
                 }
-                s.settings = settings
+                s.settings = json.dumps(settings)
                 s.error_message = "ok"
-                s.old_settings = settings
+                s.old_settings = json.dumps(settings)
 
                 s.is_active = 1
                 s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
@@ -109,8 +113,8 @@ def update():
                 settings["cookies"] = {
                     "sessionid": cl.authorization_data["sessionid"]
                 }
-                s.settings = settings
-                s.old_settings = settings
+                s.settings = json.dumps(settings)
+                s.old_settings = json.dumps(settings)
                 s.is_active = 1
                 s.error_message = "ok"
                 s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
