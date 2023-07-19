@@ -57,6 +57,7 @@ def update():
                     except Exception  as e:
                         print(f"sessings_cook 1 {e}")
                         try:
+                            print(str(s.old_settings))
                             sessings_cook = json.loads(str(s.old_settings.replace("'", '"')))
                         except Exception as e:
                             print(f"sessings_cook 2 {e}")
