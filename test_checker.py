@@ -42,7 +42,7 @@ def update():
 
     i = 0
     for s in Sessions.objects.filter():
-        e = "not ok"
+        eror = "not ok"
         i += 1
         print(i)
         if s.old_settings is not None:
@@ -60,6 +60,7 @@ def update():
                     s.save()
                     continue
                 except Exception as e:
+                    eror = str(e)
                     print(f"old_settings {e}")
         if s.old_session_id:
             try:
@@ -82,6 +83,7 @@ def update():
                 s.save()
                 continue
             except Exception as e:
+                eror = str(e)
                 print(f"old_session_id {e}")
         if s.login is not None and s.password is not None:
             try:
@@ -103,14 +105,14 @@ def update():
                 s.save()
                 continue
             except Exception as e:
+                eror = str(e)
                 print(f"login {e}")
                 s.is_active = 20
                 s.settings = None
-                s.error_message = str(e)
+                s.error_message = eror
                 s.save()
         s.settings = None
-        s.error_message = str(e)
-
+        s.error_message = eror
         s.is_active = 20
         s.save()
 
