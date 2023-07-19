@@ -178,4 +178,4 @@ def update():
         s.save()
 
 
-update()
+# update()
