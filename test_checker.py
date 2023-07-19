@@ -8,6 +8,16 @@ from instagrapi import Client
 import random
 import requests
 
+def update_while_session():
+    while True:
+        try:
+            print("update_while")
+            update()
+        except Exception as e:
+            print(f"update_while {e}")
+            time.sleep(10)
+        time.sleep(5 * 60)
+
 
 def challenge_code_handler(username, choice):
     from instagrapi.mixins.challenge import ChallengeChoice
@@ -42,7 +52,7 @@ def update():
     django.db.close_old_connections()
 
     i = 0
-    for s in Sessions.objects.filter(is_active__lte=19, error_message="ok").order_by("-id"):
+    for s in Sessions.objects.filter(is_active__lte=19).order_by("-id"):
         eror = "not ok"
         i += 1
         print(i)
