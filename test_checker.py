@@ -42,7 +42,7 @@ def update():
     django.db.close_old_connections()
 
     i = 0
-    for s in Sessions.objects.filter(is_active__lte=19).order_by("-id"):
+    for s in Sessions.objects.filter(is_active__lte=19, error_message="ok").order_by("-id"):
         eror = "not ok"
         i += 1
         print(i)
@@ -86,6 +86,7 @@ def update():
                         "sessionid": cl.authorization_data["sessionid"]
                     }
                     s.settings = json.dumps(settings)
+
                     s.is_active = 1
                     s.save(update_fields=["settings", "is_active", "error_message"])
                     continue
