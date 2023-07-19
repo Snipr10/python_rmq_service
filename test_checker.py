@@ -42,7 +42,7 @@ def update():
     django.db.close_old_connections()
 
     i = 0
-    for s in Sessions.objects.filter(is_active__lte=19).order_by("-id"):
+    for s in Sessions.objects.filter(is_active__lte=19):
         eror = "not ok"
         i += 1
         print(i)
@@ -51,7 +51,6 @@ def update():
             print("old_settings")
             if "authorization_data" in str(s.old_settings):
                 try:
-                    print(s.old_session_id)
                     cl = Client(
                         proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
                         settings=json.loads(s.old_settings)
