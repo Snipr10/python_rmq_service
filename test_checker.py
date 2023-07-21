@@ -40,6 +40,7 @@ def update():
         ) from exc
     print(1)
     import django
+    import django.db
 
     django.setup()
     import pymysql
@@ -98,6 +99,8 @@ def update():
                     s.settings = json.dumps(settings)
 
                     s.is_active = 1
+                    django.db.close_old_connections()
+
                     s.save(update_fields=["settings", "is_active", "error_message"])
                     continue
                 except Exception as e:
@@ -132,6 +135,7 @@ def update():
                 s.old_settings = json.dumps(settings)
 
                 s.is_active = 1
+                django.db.close_old_connections()
                 s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
                 continue
             except Exception as e:
@@ -163,6 +167,7 @@ def update():
                 s.old_settings = json.dumps(settings)
                 s.is_active = 1
                 s.error_message = "ok"
+                django.db.close_old_connections()
                 s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
                 continue
             except Exception as e:
@@ -172,6 +177,7 @@ def update():
                 s.settings = None
                 s.error_message = eror
                 s.save()
+        django.db.close_old_connections()
         s.settings = None
         s.error_message = eror
         s.is_active = 20
