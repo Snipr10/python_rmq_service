@@ -12,7 +12,7 @@ def update_while_session():
     while True:
         try:
             print("update_while")
-            update()
+            update_new()
         except Exception as e:
             print(f"update_while {e}")
             time.sleep(10)
@@ -184,4 +184,60 @@ def update():
         s.save()
 
 
-# update()
+def update_new():
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?"
+        ) from exc
+    print(1)
+    import django
+    import django.db
+
+    django.setup()
+    import pymysql
+    import django.db
+    from utils import update_time_timezone
+    from django.utils import timezone
+
+    pymysql.install_as_MySQLdb()
+    from core.models import Sessions, Keyword, SourcesItems, Sources, KeywordSource, AllProxy, IgProxyBanned
+    django.db.close_old_connections()
+    proxies = [
+        "bxxkro3bt05zq96wi0gnv9b:RNW78Fm5@fast.froxy.com:10000",
+        "8qevqqam4dgm9ibix83i1mr:RNW78Fm5@fast.froxy.com:10000",
+        "p48gtd0e12otayal34e7ueb:RNW78Fm5@fast.froxy.com:10000",
+        "1rstkmb0mdzqgakkxkhvq6e:RNW78Fm5@fast.froxy.com:10000",
+        "npvxw6bb5xdgbrd5vsaolhr:RNW78Fm5@fast.froxy.com:10000",
+    ]
+    i = 0
+    for s in Sessions.objects.filter(is_active=20, error_message__contains="wait a few minutes before you try").order_by("-id"):
+        try:
+            print(s.id)
+            cl = Client(
+                proxy=f"http://{proxies[i]}")
+
+            cl.challenge_code_handler = challenge_code_handler
+            cl.login(s.login, s.password)
+
+            settings = cl.get_settings()
+            settings["authorization_data"] = cl.authorization_data
+            settings["cookies"] = {
+                "sessionid": cl.authorization_data["sessionid"]
+            }
+            s.settings = str(settings)
+            s.old_settings = json.dumps(settings)
+            s.is_active = 1
+            s.error_message = "ok"
+            django.db.close_old_connections()
+            s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
+        except Exception as e:
+            print(f"{s.id} : {e}")
+
+            i += 1
+            if len(proxies) == i:
+                i = 0
