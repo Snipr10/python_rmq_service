@@ -255,3 +255,4 @@ def update_new():
             i += 1
             if len(proxies) == i:
                 i = 0
+                time.sleep(5*60)
