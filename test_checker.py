@@ -215,7 +215,11 @@ def update_new():
         "npvxw6bb5xdgbrd5vsaolhr:RNW78Fm5@fast.froxy.com:10000",
     ]
     i = 0
-    for s in Sessions.objects.filter(is_active=20, error_message__contains="wait a few minutes before you try").order_by("-id"):
+
+    print( Sessions.objects.filter(is_active__gte=20, is_active__lte=23, error_message__contains="wait a few minutes before you try").order_by("is_active","-id")[:10])
+    print( Sessions.objects.filter(is_active__gte=20, is_active__lte=23, error_message__contains="wait a few minutes before you try").order_by("-id", 'is_active')[:10])
+
+    for s in Sessions.objects.filter(is_active__gte=20, is_active__lte=23, error_message__contains="wait a few minutes before you try").order_by("is_active","-id"):
         try:
             print(f"{s.id} : {proxies[i]}")
             cl = Client(
@@ -236,6 +240,10 @@ def update_new():
             django.db.close_old_connections()
             s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
         except Exception as e:
+            s.is_active = s.is_active +1
+            s.error_message = str(e)
+            django.db.close_old_connections()
+            s.save(update_fields=["is_active", "error_message"])
             print(f"{s.id} : {e}")
 
             i += 1
