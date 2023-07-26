@@ -217,7 +217,7 @@ def update_new():
     i = 0
     for s in Sessions.objects.filter(is_active=20, error_message__contains="wait a few minutes before you try").order_by("-id"):
         try:
-            print(s.id)
+            print(f"{s.id} : {proxies[i]}")
             cl = Client(
                 proxy=f"http://{proxies[i]}")
 
