@@ -12,12 +12,21 @@ def update_while_session():
     while True:
         try:
             print("update_while")
+            update()
+        except Exception as e:
+            print(f"update_while {e}")
+            time.sleep(10)
+        time.sleep(1 * 60)
+
+def update_new_while_session():
+    while True:
+        try:
+            print("update_while")
             update_new()
         except Exception as e:
             print(f"update_while {e}")
             time.sleep(10)
-        time.sleep(5 * 60)
-
+        time.sleep(1 * 60)
 
 def challenge_code_handler(username, choice):
     from instagrapi.mixins.challenge import ChallengeChoice
@@ -53,7 +62,7 @@ def update():
     django.db.close_old_connections()
 
     i = 0
-    for s in Sessions.objects.filter(is_active__lte=19, settings__isnull=True).order_by("-id"):
+    for s in Sessions.objects.filter(is_active__lte=19, settings__isnull=True).order_by("-id")[:10]:
         eror = "not ok"
         i += 1
         print(i)
