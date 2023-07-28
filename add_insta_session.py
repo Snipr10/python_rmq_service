@@ -87,8 +87,10 @@ def add_sessions():
                         body['proxy_ip'] = proxy.ip
                         body['proxy_port'] = proxy.port
                         body['proxy_login'] = proxy.login
-                        body['proxy_pass'] = proxy.proxy_password
-
+                        if "RNW78Fm51" in proxy.proxy_password:
+                            body['proxy_pass'] = "RNW78Fm51"
+                        else:
+                            body['proxy_pass'] = "RNW78Fm51"
                         if body.get("settings"):
                             try:
                                 body['settings'] = ast.literal_eval(body.get("settings"))
