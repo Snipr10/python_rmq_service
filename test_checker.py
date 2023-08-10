@@ -63,10 +63,17 @@ def update():
 
     i = 0
     for s in Sessions.objects.filter(is_active__lte=19, settings__isnull=True).order_by("-id")[:10]:
-        eror = "not ok"
+        error = "not ok"
         i += 1
         print(i)
         print(s.id)
+        if "HTTPSConnectionPool" in s.error_message:
+            s.settings = s.old_settings
+            s.is_active = 1
+            s.error_message = "ok connect"
+            s.save(update_fields=["settings", "is_active", "error_message"])
+            continue
+
         if s.old_settings is not None:
             print("old_settings")
             if "authorization_data" in str(s.old_settings):
@@ -113,7 +120,7 @@ def update():
                     s.save(update_fields=["settings", "is_active", "error_message"])
                     continue
                 except Exception as e:
-                    eror = str(e)
+                    error = str(e)
                     print(f"old_settings {e}")
         if s.old_session_id:
             try:
@@ -148,7 +155,7 @@ def update():
                 s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
                 continue
             except Exception as e:
-                eror = str(e)
+                error = str(e)
                 print(f"old_session_id {e}")
         if s.login is not None and s.password is not None:
             try:
@@ -180,15 +187,15 @@ def update():
                 s.save(update_fields=["settings", "is_active", "error_message", "old_settings"])
                 continue
             except Exception as e:
-                eror = str(e)
+                error = str(e)
                 print(f"login {e}")
                 s.is_active = 20
                 s.settings = None
-                s.error_message = eror
+                s.error_message = error
                 s.save()
         django.db.close_old_connections()
         s.settings = None
-        s.error_message = eror
+        s.error_message = error
         s.is_active = 20
         s.save()
 
