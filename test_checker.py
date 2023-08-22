@@ -62,7 +62,9 @@ def update():
     django.db.close_old_connections()
 
     i = 0
-    for s in Sessions.objects.filter(is_active__lte=19, settings__isnull=True).order_by("-id")[:10]:
+    for s in Sessions.objects.filter(settings__isnull=True).order_by("?")[:100]:
+
+    # for s in Sessions.objects.filter(settings__isnull=True).order_by("-id")[:10]:
         error = "not ok"
         i += 1
         print(i)
@@ -73,6 +75,8 @@ def update():
             s.error_message = "ok connect"
             s.save(update_fields=["settings", "is_active", "error_message"])
             continue
+        proxy_object = AllProxy.objects.filter(ip = "fast.froxy.com").order_by('?')[0]
+        proxy = f"http://{proxy_object.login}:RNW78Fm5@{proxy_object.ip}:{proxy_object.port}"
 
         if s.old_settings is not None:
             print("old_settings")
@@ -92,7 +96,7 @@ def update():
                             print(f"sessings_cook 2 {e}")
 
                     cl = Client(
-                        proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
+                        proxy=proxy,
                         settings=sessings_cook
                     )
                     cl.challenge_code_handler = challenge_code_handler
@@ -127,7 +131,7 @@ def update():
                 print("old_session_id 1")
 
                 cl = Client(
-                    proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
+                    proxy=proxy,
                 )
                 cl.challenge_code_handler = challenge_code_handler
                 cl.login_by_sessionid(
@@ -160,7 +164,7 @@ def update():
         if s.login is not None and s.password is not None:
             try:
                 cl = Client(
-                    proxy="http://tools-admin_metamap_com:456f634698@193.142.249.56:30001",
+                    proxy=proxy,
                 )
                 cl.challenge_code_handler = challenge_code_handler
                 cl.login(s.login, s.password)
@@ -223,20 +227,16 @@ def update_new():
     pymysql.install_as_MySQLdb()
     from core.models import Sessions, Keyword, SourcesItems, Sources, KeywordSource, AllProxy, IgProxyBanned
     django.db.close_old_connections()
-    proxies = [
-        "bxxkro3bt05zq96wi0gnv9b:RNW78Fm5@fast.froxy.com:10000",
-        "8qevqqam4dgm9ibix83i1mr:RNW78Fm5@fast.froxy.com:10000",
-        "p48gtd0e12otayal34e7ueb:RNW78Fm5@fast.froxy.com:10000",
-        "1rstkmb0mdzqgakkxkhvq6e:RNW78Fm5@fast.froxy.com:10000",
-        "npvxw6bb5xdgbrd5vsaolhr:RNW78Fm5@fast.froxy.com:10000",
-    ]
+
     i = 0
 
     for s in Sessions.objects.filter(is_active__gte=19, is_active__lte=23).order_by("is_active","-id")[:10]:
+        proxy_object = AllProxy.objects.filter(ip = "fast.froxy.com").order_by('?')[0]
+        proxy = f"http://{proxy_object.login}:RNW78Fm5@{proxy_object.ip}:{proxy_object.port}"
         try:
             print(f"{s.id} : {proxies[i]}")
             cl = Client(
-                proxy=f"http://{proxies[i]}")
+                proxy=proxy)
 
             cl.challenge_code_handler = challenge_code_handler
             cl.login(s.login, s.password)
