@@ -104,7 +104,7 @@ def update():
                     message = cl.private.get(
                         'https://i.instagram.com/api/v1/fbsearch/search_engine_result_page/',
                         params={'query': "бассейн", 'next_max_id': None},
-                        proxies=cl.private.proxies
+                        proxies=proxy
                     ).json().get('message')
 
                     if message is not None:
@@ -139,7 +139,7 @@ def update():
                 message = cl.private.get(
                     'https://i.instagram.com/api/v1/fbsearch/search_engine_result_page/',
                     params={'query': "бассейн", 'next_max_id': None},
-                    proxies=cl.private.proxies
+                    proxies=proxy
                 ).json().get('message')
 
                 if message is not None:
@@ -172,7 +172,7 @@ def update():
                 message = cl.private.get(
                     'https://i.instagram.com/api/v1/fbsearch/search_engine_result_page/',
                     params={'query': "бассейн", 'next_max_id': None},
-                    proxies=cl.private.proxies
+                    proxies=proxy
                 ).json().get('message')
 
                 if message is not None:
@@ -234,7 +234,6 @@ def update_new():
         proxy_object = AllProxy.objects.filter(ip = "fast.froxy.com").order_by('?')[0]
         proxy = f"http://{proxy_object.login}:RNW78Fm5@{proxy_object.ip}:{proxy_object.port}"
         try:
-            print(f"{s.id} : {proxies[i]}")
             cl = Client(
                 proxy=proxy)
 
@@ -260,6 +259,4 @@ def update_new():
             print(f"{s.id} : {e}")
 
             i += 1
-            if len(proxies) == i:
-                i = 0
-                time.sleep(5*60)
+
