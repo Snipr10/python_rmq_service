@@ -234,7 +234,7 @@ def update_new():
     try:
         if len(Sessions.objects.filter(settings__isnull=False, is_active=1)) < 15:
             try:
-                Sessions.objects.filter(settings__isnull=True).update(is_active=1, settings=F('old_settings'))
+                Sessions.objects.filter(settings__isnull=True, is_active__gte=2).update(is_active=1, settings=F('old_settings'))
             except Exception as e:
                 for s in Sessions.objects.filter(settings__isnull=True):
                     s.is_active = 1
