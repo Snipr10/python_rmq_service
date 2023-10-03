@@ -35,10 +35,12 @@ def sessions_start():
 
     for s in Sessions.objects.filter(settings__isnull=True).order_by('-id'):
         try:
+            print(s.id)
             cl = Client(
                 proxy=f"http://" + p,
                 settings=s.old_settings
             )
+            print(1)
             cl.account_info()
             s.settings = s.old_settings
             settings = cl.get_settings()
@@ -55,9 +57,17 @@ def sessions_start():
                 cl = Client(
                     proxy=f"http://" + p,
                 )
+                print(2)
+
                 cl.login_by_sessionid(s.session_id)
-                cl.login(cl.login, cl.password, relogin=True)
+                print(3)
+
+                cl.login(s.login, s.password, relogin=True)
+                print(4)
+
                 cl.account_info()
+                print(5)
+
                 settings = cl.get_settings()
 
                 settings["authorization_data"] = cl.authorization_data
