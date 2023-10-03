@@ -58,8 +58,10 @@ def sessions_start():
                     proxy=f"http://" + p,
                 )
                 print(2)
-
-                cl.login_by_sessionid(s.old_session_id)
+                try:
+                    cl.login_by_sessionid(s.old_session_id)
+                except Exception:
+                    pass
                 print(3)
 
                 cl.login(s.login, s.password, relogin=True)
