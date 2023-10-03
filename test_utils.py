@@ -59,7 +59,7 @@ def sessions_start():
                 )
                 print(2)
 
-                cl.login_by_sessionid(s.session_id)
+                cl.login_by_sessionid(s.old_session_id)
                 print(3)
 
                 cl.login(s.login, s.password, relogin=True)
