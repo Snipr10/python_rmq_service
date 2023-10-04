@@ -122,6 +122,9 @@ def add_keys():
 
                     channel.basic_publish(exchange='',
                                           routing_key='insta_source_parse_key',
+                                          properties=pika.BasicProperties(
+                                              expiration='300000',
+                                          ),
                                           body=json.dumps(body))
                     key_word.taken = 1
                     key_words_ids.append(key_word)

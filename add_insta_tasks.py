@@ -77,6 +77,9 @@ def add_tasks():
                         body['last_modified'] = body['last_modified'].isoformat()
                         channel.basic_publish(exchange='',
                                               routing_key='insta_source_parse',
+                                              properties=pika.BasicProperties(
+                                                  expiration='300000',
+                                              ),
                                               body=json.dumps(body))
                     sources_item.taken = 1
                     source_ids.append(sources_item)

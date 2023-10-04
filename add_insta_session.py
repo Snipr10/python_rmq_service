@@ -100,6 +100,9 @@ def add_sessions():
 
                         channel.basic_publish(exchange='',
                                               routing_key='insta_source_ig_session_new',
+                                              properties=pika.BasicProperties(
+                                                  expiration='300000',
+                                              ),
                                               body=json.dumps(body))
                         session.taken = 1
                         session.start_parsing = update_time_timezone(timezone.localtime())
