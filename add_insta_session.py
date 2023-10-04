@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from utils import get_chanel, update_time_timezone
+import pika
 
 
 def add_sessions_while():

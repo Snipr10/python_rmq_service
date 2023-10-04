@@ -7,6 +7,7 @@ import time
 from django.db.models import Q
 from django.utils import timezone
 import django.db
+import pika
 
 from utils import get_chanel, update_time_timezone
 

@@ -9,6 +9,7 @@ from django.utils import timezone
 import django.db
 
 from utils import get_chanel, update_time_timezone
+import pika
 
 
 def add_keys_while():
