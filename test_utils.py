@@ -47,71 +47,75 @@ def sessions_start():
     p = "DduuwE:XfUCU6@45.157.36.96:8000"
     from instagrapi import Client
     i = 0
-    proxy = get_proxy()
-    if len(proxy) == 0:
-        return
-    print(proxy)
-    for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=25).order_by('-id'):
-        i += 1
-        if i > 250:
-            break
-        s.is_active += 1
-        s.save()
-        po = random.choice(proxy)
-        p_id = p[1]
-        p = po[0]
-        print(p_id)
-        print(p)
+    while True:
         try:
-
-            print(s.id)
-            cl = Client(
-                proxy=f"http://" + p,
-                settings=s.old_settings
-            )
-            print(1)
-            cl.account_info()
-            s.settings = s.old_settings
-            settings = cl.get_settings()
-
-            settings["authorization_data"] = cl.authorization_data
-            settings["cookies"] = {
-                "sessionid": cl.authorization_data["sessionid"]
-            }
-            s.settings = json.dumps(settings)
-            s.is_active = 1
-            s.proxy_id = p_id
-            s.save()
-            continue
-        except Exception as e:
-            try:
-                cl = Client(
-                    proxy=f"http://" + p,
-                )
-                print(2)
-                try:
-                    cl.login_by_sessionid(s.old_session_id)
-                except Exception:
-                    pass
-                print(3)
-
-                cl.login(s.login, s.password, relogin=True)
-                print(4)
-
-                cl.account_info()
-                print(5)
-
-                settings = cl.get_settings()
-
-                settings["authorization_data"] = cl.authorization_data
-                settings["cookies"] = {
-                    "sessionid": cl.authorization_data["sessionid"]
-                }
-                s.settings = json.dumps(settings)
-                s.error_message = "ok"
-                s.old_settings = json.dumps(settings)
-                s.is_active = 1
-                s.proxy_id = p_id
+            proxy = get_proxy()
+            if len(proxy) == 0:
+                return
+            print(proxy)
+            for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=25).order_by('-id'):
+                i += 1
+                if i > 250:
+                    break
+                s.is_active += 1
                 s.save()
-            except Exception:
+                po = random.choice(proxy)
+                p_id = p[1]
+                p = po[0]
+                print(p_id)
+                print(p)
+                try:
+
+                    print(s.id)
+                    cl = Client(
+                        proxy=f"http://" + p,
+                        settings=s.old_settings
+                    )
+                    print(1)
+                    cl.account_info()
+                    s.settings = s.old_settings
+                    settings = cl.get_settings()
+
+                    settings["authorization_data"] = cl.authorization_data
+                    settings["cookies"] = {
+                        "sessionid": cl.authorization_data["sessionid"]
+                    }
+                    s.settings = json.dumps(settings)
+                    s.is_active = 1
+                    s.proxy_id = p_id
+                    s.save()
+                    continue
+                except Exception as e:
+                    try:
+                        cl = Client(
+                            proxy=f"http://" + p,
+                        )
+                        print(2)
+                        try:
+                            cl.login_by_sessionid(s.old_session_id)
+                        except Exception:
+                            pass
+                        print(3)
+
+                        cl.login(s.login, s.password, relogin=True)
+                        print(4)
+
+                        cl.account_info()
+                        print(5)
+
+                        settings = cl.get_settings()
+
+                        settings["authorization_data"] = cl.authorization_data
+                        settings["cookies"] = {
+                            "sessionid": cl.authorization_data["sessionid"]
+                        }
+                        s.settings = json.dumps(settings)
+                        s.error_message = "ok"
+                        s.old_settings = json.dumps(settings)
+                        s.is_active = 1
+                        s.proxy_id = p_id
+                        s.save()
+                    except Exception as e:
+                        print(e)
+        except Exception as e:
                 print(e)
