@@ -59,6 +59,8 @@ def sessions_start():
         po = random.choice(proxy)
         p_id = p[1]
         p = po[0]
+        print(p_id)
+        print(p)
         try:
 
             print(s.id)
