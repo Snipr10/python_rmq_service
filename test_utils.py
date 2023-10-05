@@ -8,7 +8,20 @@ from instagrapi import Client
 import random
 import requests
 from django.db.models import F
+def get_proxy():
+    from core.models import Sources, SourcesItems, Sessions, AllProxy
 
+    pro = []
+    for p in AllProxy.objects.filter(Q(port=30001) | Q(port=8000)):
+        try:
+            proxy = f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'
+            if requests.get("https://www.instagram.com/",
+                            proxies = { 'https' : proxy}
+                            ).ok:
+                pro.append((proxy, p.id))
+        except Exception:
+            pass
+    return pro
 def sessions_start():
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'python_rmq_service.settings')
@@ -25,16 +38,29 @@ def sessions_start():
 
     django.setup()
     import pymysql
+    import random
 
     pymysql.install_as_MySQLdb()
-    from core.models import Sources, SourcesItems, Sessions
+    from core.models import Sources, SourcesItems, Sessions, AllProxy
     from django.forms.models import model_to_dict
 
     p = "DduuwE:XfUCU6@45.157.36.96:8000"
     from instagrapi import Client
-
-    for s in Sessions.objects.filter(settings__isnull=True).order_by('-id'):
+    i = 0
+    proxy = get_proxy()
+    if len(proxy) == 0:
+        return
+    for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=25).order_by('-id'):
+        i += 1
+        if i > 250:
+            break
+        s.is_active += 1
+        s.save()
+        po = random.choice(proxy)
+        p_id = p[1]
+        p = po[0]
         try:
+
             print(s.id)
             cl = Client(
                 proxy=f"http://" + p,
@@ -50,6 +76,8 @@ def sessions_start():
                 "sessionid": cl.authorization_data["sessionid"]
             }
             s.settings = json.dumps(settings)
+            s.is_active = 1
+            s.proxy_id = p_id
             s.save()
             continue
         except Exception as e:
@@ -79,6 +107,8 @@ def sessions_start():
                 s.settings = json.dumps(settings)
                 s.error_message = "ok"
                 s.old_settings = json.dumps(settings)
+                s.is_active = 1
+                s.proxy_id = p_id
                 s.save()
             except Exception:
                 print(e)
