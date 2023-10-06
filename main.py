@@ -41,7 +41,7 @@ if __name__ == '__main__':
     print("update_session_id_while")
     # threading.Thread(target=update_session_id_while, args=()).start()
     print("update_while_session")
-    threading.Thread(target=update_while_session, args=()).start()
+    # threading.Thread(target=update_while_session, args=()).start()
 
     print("update_new_while_session")
     threading.Thread(target=update_new_while_session, args=()).start()
