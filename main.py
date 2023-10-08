@@ -44,6 +44,6 @@ if __name__ == '__main__':
     # threading.Thread(target=update_while_session, args=()).start()
 
     print("update_new_while_session")
-    threading.Thread(target=update_new_while_session, args=()).start()
-
-    sessions_start()
+    # threading.Thread(target=update_new_while_session, args=()).start()
+    #
+    # sessions_start()
