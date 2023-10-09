@@ -8,6 +8,18 @@ from instagrapi import Client
 import random
 import requests
 from django.db.models import F
+
+def challenge_code_handler(username, choice):
+    a= "!23"
+    from instagrapi.mixins.challenge import ChallengeChoice
+    if choice == ChallengeChoice.SMS:
+        return a
+    elif choice == ChallengeChoice.EMAIL:
+        return a
+    return False
+
+
+
 def get_proxy():
     from core.models import Sources, SourcesItems, Sessions, AllProxy
 
@@ -71,6 +83,7 @@ def sessions_start():
                         proxy=p,
                         settings=s.old_settings
                     )
+                    cl.challenge_code_handler = challenge_code_handler
                     print(1)
                     cl.account_info()
                     s.settings = s.old_settings
@@ -90,12 +103,15 @@ def sessions_start():
                         cl = Client(
                             proxy=p,
                         )
+                        cl.challenge_code_handler = challenge_code_handler
+
                         print(2)
-                        try:
-                            cl.login_by_sessionid(s.old_session_id)
-                        except Exception:
-                            pass
-                        print(3)
+                        # try:
+                        #     if s.old_session_id
+                        #     cl.login_by_sessionid(s.old_session_id)
+                        # except Exception:
+                        #     pass
+                        # print(3)
 
                         cl.login(s.login, s.password, relogin=True)
                         print(4)
@@ -122,4 +138,4 @@ def sessions_start():
                             s.save()
                         print("ex " + str(e))
         except Exception as e:
-                print(e)
+            print("ex1 " + str(e))
