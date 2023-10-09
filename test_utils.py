@@ -44,7 +44,7 @@ def sessions_start():
     from core.models import Sources, SourcesItems, Sessions, AllProxy
     from django.forms.models import model_to_dict
 
-    p = "DduuwE:XfUCU6@45.157.36.96:8000"
+    # p = "DduuwE:XfUCU6@45.157.36.96:8000"
     from instagrapi import Client
     i = 0
     while True:
@@ -53,14 +53,14 @@ def sessions_start():
             if len(proxy) == 0:
                 return
             print(proxy)
-            for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=5).order_by('-id'):
+            for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=5, proxy__isnull=True).order_by('-id'):
                 i += 1
-                if i > 250:
+                if i > 50:
                     break
                 s.is_active += 1
                 s.save()
                 po = random.choice(proxy)
-                p_id = p[1]
+                p_id = po[1]
                 p = po[0]
                 print(p_id)
                 print(p)
