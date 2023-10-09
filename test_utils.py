@@ -116,6 +116,10 @@ def sessions_start():
                         s.proxy_id = p_id
                         s.save()
                     except Exception as e:
+                        if "ChallengeChoice" in e:
+                            s.is_active = 25
+                            s.error_message = str(e)
+                            s.save()
                         print(e)
         except Exception as e:
                 print(e)
