@@ -120,6 +120,6 @@ def sessions_start():
                             s.is_active = 25
                             s.error_message = str(e)
                             s.save()
-                        print(e)
+                        print("ex " + str(e))
         except Exception as e:
                 print(e)
