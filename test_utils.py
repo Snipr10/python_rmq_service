@@ -53,7 +53,7 @@ def sessions_start():
             if len(proxy) == 0:
                 return
             print(proxy)
-            for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=5, proxy__isnull=True).order_by('-id'):
+            for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=5, proxy_id__isnull=True).order_by('-id'):
                 i += 1
                 if i > 50:
                     break
