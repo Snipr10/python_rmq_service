@@ -68,7 +68,7 @@ def sessions_start():
 
                     print(s.id)
                     cl = Client(
-                        proxy=f"http://" + p,
+                        proxy=p,
                         settings=s.old_settings
                     )
                     print(1)
@@ -88,7 +88,7 @@ def sessions_start():
                 except Exception as e:
                     try:
                         cl = Client(
-                            proxy=f"http://" + p,
+                            proxy=p,
                         )
                         print(2)
                         try:
