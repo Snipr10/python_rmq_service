@@ -72,6 +72,8 @@ def sessions_start():
                         break
                     s.is_active += 1
                     s.save()
+                    if len(proxy)  ==0 :
+                        proxy = get_proxy()
                     po = random.choice(proxy)
                     p_id = po[1]
                     p = po[0]
