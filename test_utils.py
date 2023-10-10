@@ -66,59 +66,28 @@ def sessions_start():
                 return
             print(proxy)
             for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=5, proxy_id__isnull=True).order_by('-id'):
-                i += 1
-                if i > 50:
-                    break
-                s.is_active += 1
-                s.save()
-                po = random.choice(proxy)
-                p_id = po[1]
-                p = po[0]
-                print(p_id)
-                print(p)
                 try:
-
-                    print(s.id)
-                    cl = Client(
-                        proxy=p,
-                        settings=s.old_settings
-                    )
-                    cl.challenge_code_handler = challenge_code_handler
-                    print(1)
-                    cl.account_info()
-                    s.settings = s.old_settings
-                    settings = cl.get_settings()
-
-                    settings["authorization_data"] = cl.authorization_data
-                    settings["cookies"] = {
-                        "sessionid": cl.authorization_data["sessionid"]
-                    }
-                    s.settings = json.dumps(settings)
-                    s.is_active = 1
-                    s.proxy_id = p_id
+                    i += 1
+                    if i > 50:
+                        break
+                    s.is_active += 1
                     s.save()
-                    continue
-                except Exception as e:
+                    po = random.choice(proxy)
+                    p_id = po[1]
+                    p = po[0]
+                    print(p_id)
+                    print(p)
                     try:
+
+                        print(s.id)
                         cl = Client(
                             proxy=p,
+                            settings=s.old_settings
                         )
                         cl.challenge_code_handler = challenge_code_handler
-
-                        print(2)
-                        # try:
-                        #     if s.old_session_id
-                        #     cl.login_by_sessionid(s.old_session_id)
-                        # except Exception:
-                        #     pass
-                        # print(3)
-
-                        cl.login(s.login, s.password, relogin=True)
-                        print(4)
-
+                        print(1)
                         cl.account_info()
-                        print(5)
-
+                        s.settings = s.old_settings
                         settings = cl.get_settings()
 
                         settings["authorization_data"] = cl.authorization_data
@@ -126,16 +95,50 @@ def sessions_start():
                             "sessionid": cl.authorization_data["sessionid"]
                         }
                         s.settings = json.dumps(settings)
-                        s.error_message = "ok"
-                        s.old_settings = json.dumps(settings)
                         s.is_active = 1
                         s.proxy_id = p_id
                         s.save()
+                        continue
                     except Exception as e:
-                        if "ChallengeChoice" in e:
-                            s.is_active = 25
-                            s.error_message = str(e)
+                        try:
+                            cl = Client(
+                                proxy=p,
+                            )
+                            cl.challenge_code_handler = challenge_code_handler
+
+                            print(2)
+                            # try:
+                            #     if s.old_session_id
+                            #     cl.login_by_sessionid(s.old_session_id)
+                            # except Exception:
+                            #     pass
+                            # print(3)
+
+                            cl.login(s.login, s.password, relogin=True)
+                            print(4)
+
+                            cl.account_info()
+                            print(5)
+
+                            settings = cl.get_settings()
+
+                            settings["authorization_data"] = cl.authorization_data
+                            settings["cookies"] = {
+                                "sessionid": cl.authorization_data["sessionid"]
+                            }
+                            s.settings = json.dumps(settings)
+                            s.error_message = "ok"
+                            s.old_settings = json.dumps(settings)
+                            s.is_active = 1
+                            s.proxy_id = p_id
                             s.save()
-                        print("ex " + str(e))
+                        except Exception as e:
+                            if "ChallengeChoice" in e:
+                                s.is_active = 25
+                                s.error_message = str(e)
+                                s.save()
+                            print("ex " + str(e))
+                except Exception as e:
+                    print("ex0 " + str(e))
         except Exception as e:
             print("ex1 " + str(e))
