@@ -62,7 +62,7 @@ def add_keys():
             )
             print('Messages in queue Key %d' % res.method.message_count)
             # TODO
-            if res.method.message_count < 10:
+            if res.method.message_count < 2:
                 select_sources = Sources.objects.filter(
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
