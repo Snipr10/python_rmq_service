@@ -6,7 +6,7 @@ import time
 
 import django.db
 
-from utils import get_chanel, get_sphinx_id, get_md5_text
+from utils import get_chanel, get_sphinx_id, get_md5_text, FIRST_DATE
 
 
 def read_reslut_while():
