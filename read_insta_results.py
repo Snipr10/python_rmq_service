@@ -50,8 +50,38 @@ def read_tasks():
             print(body)
             for r in body:
                 try:
+
+                    created_date = datetime.datetime.fromisoformat(r.get("taken_at"))
+
+                    print("FIRST_DATE")
+                    if created_date < FIRST_DATE:
+                        continue
+                    print("created_date < FIRST_DATE")
+
                     owner_id = r.get("user").get("pk")
                     owner_sphinx_id = get_sphinx_id(owner_id)
+
+
+                    post_id = r.get("pk")
+                    print(f"post id {post_id}")
+                    post_sphinx_id = get_sphinx_id(r.get("code"))
+                    post.append(
+                        IgPost(
+                            id=post_id,
+                            owner_id=owner_id,
+                            shortcode=r.get("code"),
+                            owner_sphinx_id=owner_sphinx_id,
+                            content=r.get("caption_text"),
+                            created_date=created_date,
+                            comments=r.get("comment_count"),
+                            likes=r.get("like_count"),
+                            sphinx_id=post_sphinx_id,
+                            content_hash=get_md5_text(r.get("caption_text"))
+                        )
+                    )
+
+
+
                     users.append(
                         IgUser(
                             id=owner_id,
@@ -61,24 +91,7 @@ def read_tasks():
                             logo=r.get("user").get("profile_pic_url"),
                         )
                     )
-                    post_id = r.get("pk")
-                    print(f"post id {post_id}")
-                    post_sphinx_id = get_sphinx_id(r.get("code"))
 
-                    post.append(
-                        IgPost(
-                            id=post_id,
-                            owner_id=owner_id,
-                            shortcode=r.get("code"),
-                            owner_sphinx_id=owner_sphinx_id,
-                            content=r.get("caption_text"),
-                            created_date=datetime.datetime.fromisoformat(r.get("taken_at")),
-                            comments=r.get("comment_count"),
-                            likes=r.get("like_count"),
-                            sphinx_id=post_sphinx_id,
-                            content_hash=get_md5_text(r.get("caption_text"))
-                        )
-                    )
                     sphinx_ids.append(post_sphinx_id)
                     media.append(
                         IgMedia(

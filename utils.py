@@ -27,3 +27,6 @@ def get_md5_text(text):
     m.update(text.encode())
     return str(m.hexdigest())
 
+
+FIRST_DATE = datetime.fromisoformat('2022-04-01T01:00:00')
+
