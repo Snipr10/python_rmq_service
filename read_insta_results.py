@@ -53,7 +53,7 @@ def read_tasks():
 
                     created_date = datetime.datetime.fromisoformat(r.get("taken_at"))
 
-                    print("FIRST_DATE")
+                    print(f"FIRST_DATE {created_date}")
                     if created_date < FIRST_DATE:
                         continue
                     print("created_date < FIRST_DATE")
