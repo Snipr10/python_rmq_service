@@ -142,5 +142,7 @@ def sessions_start():
                             print("ex " + str(e))
                 except Exception as e:
                     print("ex0 " + str(e))
+
         except Exception as e:
             print("ex1 " + str(e))
+        time.sleep(60*45)
