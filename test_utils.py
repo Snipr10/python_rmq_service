@@ -24,7 +24,7 @@ def get_proxy():
     from core.models import Sources, SourcesItems, Sessions, AllProxy
 
     pro = []
-    for p in AllProxy.objects.filter(Q(port=30001) | Q(port=8000)):
+    for p in AllProxy.objects.filter(Q(port=30001) | Q(port=30011) | Q(port=8000)):
         try:
             proxy = f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'
             if requests.get("https://www.instagram.com/",
