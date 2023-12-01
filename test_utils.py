@@ -31,8 +31,8 @@ def get_proxy():
                             proxies = { 'https' : proxy}
                             ).ok:
                 pro.append((proxy, p.id))
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"{p} {e}")
     return pro
 def sessions_start():
 
