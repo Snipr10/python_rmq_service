@@ -32,7 +32,7 @@ def get_proxy():
                             ).ok:
                 pro.append((proxy, p.id))
         except Exception as e:
-            print(f"{p} {e}")
+            print(f"get_proxy {p} {e}")
     return pro
 def sessions_start():
 
