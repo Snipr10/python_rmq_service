@@ -66,6 +66,7 @@ def sessions_start():
                 return
             print(proxy)
             for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=5, proxy_id__isnull=True).order_by('-id'):
+                print(s)
                 try:
                     i += 1
                     if i > 50:
@@ -142,7 +143,6 @@ def sessions_start():
                             print("ex " + str(e))
                 except Exception as e:
                     print("ex0 " + str(e))
-
+            time.sleep(60 * 45)
         except Exception as e:
             print("ex1 " + str(e))
-        time.sleep(60*45)
