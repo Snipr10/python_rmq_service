@@ -67,6 +67,8 @@ def sessions_start():
             print(proxy)
             django.db.close_old_connections()
             for s in Sessions.objects.filter(settings__isnull=True, is_active__lte=5, proxy_id__isnull=True).order_by('-id'):
+                django.db.close_old_connections()
+
                 print(s)
                 try:
                     i += 1
