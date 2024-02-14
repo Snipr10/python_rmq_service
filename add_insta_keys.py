@@ -44,18 +44,18 @@ def add_keys():
     Keyword.objects.filter(network_id=7, taken=1).update(taken=0)
 
     while True:
-        # try:
-        #     django.db.close_old_connections()
-        #
-        #     for k in Keyword.objects.filter(network_id=7, disabled=0,
-        #                                     last_modified__gte=datetime.date(1999, 1, 1),
-        #                                     ):
-        #         if len(k.keyword) > 20 and len(k.keyword.split(" ")) >= 4:
-        #             print(k.keyword)
-        #             k.disabled = 1
-        #             k.save(update_fields=["disabled"])
-        # except Exception as e:
-        #     print(f"Keyword {e}")
+        try:
+            django.db.close_old_connections()
+
+            for k in Keyword.objects.filter(network_id=7, disabled=0,
+                                            last_modified__gte=datetime.date(1999, 1, 1),
+                                            ):
+                if len(k.keyword) > 20 and len(k.keyword.split(" ")) >= 4:
+                    print(k.keyword)
+                    k.disabled = 1
+                    k.save(update_fields=["disabled"])
+        except Exception as e:
+            print(f"Keyword {e}")
         try:
             res = channel.queue_declare(
                 queue='insta_source_parse_key',
@@ -64,7 +64,7 @@ def add_keys():
             # TODO
             if res.method.message_count < 10:
                 select_sources = Sources.objects.filter(
-                    Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1, id=19756,
+                    Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
 
                 last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, enabled=1, disabled=0,
@@ -72,7 +72,7 @@ def add_keys():
                                                                      minutes=60)
                                                                  ).values_list('id', flat=True))
 
-                source_special = SourcesSpecial.objects.filter(keyword_id__in=last_hour_keys_ids, source_id=19756)
+                source_special = SourcesSpecial.objects.filter(keyword_id__in=last_hour_keys_ids)
                 key_words = []
                 if len(source_special) == 0:
 
