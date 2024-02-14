@@ -64,7 +64,7 @@ def add_keys():
             # TODO
             if res.method.message_count < 10:
                 select_sources = Sources.objects.filter(
-                    Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                    Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1, id=19756,
                     status=1)
 
                 last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, enabled=1, disabled=0,
@@ -72,7 +72,7 @@ def add_keys():
                                                                      minutes=60)
                                                                  ).values_list('id', flat=True))
 
-                source_special = SourcesSpecial.objects.filter(keyword_id__in=last_hour_keys_ids)
+                source_special = SourcesSpecial.objects.filter(keyword_id__in=last_hour_keys_ids, source_id=19756)
                 key_words = []
                 if len(source_special) == 0:
 
