@@ -42,7 +42,7 @@ def read_tasks():
     sphinx_ids = []
     media = []
     update_sphinx = []
-
+    update_sphinx_rmq = []
     def callback(ch, method, properties, body):
         try:
             django.db.close_old_connections()
@@ -100,6 +100,7 @@ def read_tasks():
                         )
                     )
                     update_sphinx.append(UpdateIndex(id=post_id, network_id=7, sphinx_id=post_sphinx_id))
+                    update_sphinx_rmq.append(post_sphinx_id)
                     if len(post) > 10:
                         django.db.close_old_connections()
                         try:
@@ -123,6 +124,7 @@ def read_tasks():
                             print(f"IgMedia: {e}")
                 except Exception as e:
                     print(f"insta_key_result{e}")
+            add_update_index_to_rmq(update_sphinx_rmq)
         except Exception as e:
             print(f"callback{e}")
             django.db.close_old_connections()
@@ -130,6 +132,25 @@ def read_tasks():
     channel.basic_consume(queue='insta_key_result', on_message_callback=callback, auto_ack=True)
     channel.start_consuming()
 
+rmq_settings = "amqp://post_index:R2ghtt9hebLv@192.168.5.46:5672/post_index"
 
+def add_update_index_to_rmq(sphinx_ids, attempts=0):
+    print("add_update_index_to_rmq")
+    try:
+        if len(sphinx_ids) < 10000:
+            parameters = pika.URLParameters(    )
+            connection = pika.BlockingConnection(parameters=parameters)
+            channel = connection.channel()
+            for sphinx_id in sphinx_ids:
+                rmq_json_data = {
+                    "id": sphinx_id,
+                    "network_id": 7
+                }
+                channel.basic_publish(exchange='',
+                                      routing_key='post_index',
+                                      body=json.dumps(rmq_json_data))
+            channel.close()
+    except Exception as e:
+        print(f"can not save {e}")
 if __name__ == "__main__":
     read_tasks()
