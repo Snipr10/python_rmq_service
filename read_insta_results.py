@@ -5,6 +5,7 @@ import os
 import time
 
 import django.db
+import pika
 
 from utils import get_chanel, get_sphinx_id, get_md5_text, FIRST_DATE
 
