@@ -139,7 +139,7 @@ def add_update_index_to_rmq(sphinx_ids, attempts=0):
     print("add_update_index_to_rmq")
     try:
         if len(sphinx_ids) < 10000:
-            parameters = pika.URLParameters(    )
+            parameters = pika.URLParameters(rmq_settings)
             connection = pika.BlockingConnection(parameters=parameters)
             channel = connection.channel()
             for sphinx_id in sphinx_ids:
