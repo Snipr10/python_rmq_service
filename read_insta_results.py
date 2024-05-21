@@ -8,7 +8,7 @@ import django.db
 import pika
 
 from utils import get_chanel, get_sphinx_id, get_md5_text, FIRST_DATE
-
+from dateutil.parser import parse
 
 def read_reslut_while():
     while True:
@@ -51,9 +51,13 @@ def read_tasks():
             print(body)
             for r in body:
                 try:
-
-                    created_date = datetime.datetime.fromisoformat(r.get("taken_at"))
-
+                    try:
+                        created_date = datetime.datetime.fromisoformat(r.get("taken_at"))
+                    except Exception:
+                        try:
+                            created_date = parse(r.get("taken_at"))
+                        except Exception:
+                            created_date = datetime.datetime.now()
                     print(f"FIRST_DATE {created_date}")
                     if created_date < FIRST_DATE:
                         continue
