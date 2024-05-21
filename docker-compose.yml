@@ -13,3 +13,15 @@ services:
       driver: "json-file"
       options:
         max-size: "100m"
+  main_f:
+    build: ./
+    command: python3 main_session.py
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512Mb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
