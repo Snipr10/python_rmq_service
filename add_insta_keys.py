@@ -85,7 +85,7 @@ def add_keys():
                                                        ).order_by('-last_modified')
                     key_words = list(key_words)
 
-                if len(key_words) < 10:
+                if len(key_words) < 50:
                     key_words_non_s = Keyword.objects.filter(network_id=7, taken=0, disabled=0,
                                                        id__in=list(source_special.values_list('keyword_id', flat=True)),
                                                        last_modified__gte=datetime.date(1999, 1, 1),
@@ -101,7 +101,7 @@ def add_keys():
 
                 key_words_ids = []
 
-                for key_word in key_words[:10]:
+                for key_word in key_words[:50]:
                     body = model_to_dict(key_word)
                     try:
                         if body['created_date']:
