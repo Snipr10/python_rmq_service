@@ -67,7 +67,7 @@ def add_keys():
                     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                     status=1)
 
-                last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, enabled=1, disabled=0,
+                last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, disabled=0,
                                                                  last_modified__lte=datetime.datetime.now() - datetime.timedelta(
                                                                      minutes=60)
                                                                  ).values_list('id', flat=True))
@@ -79,17 +79,17 @@ def add_keys():
                     key_source = KeywordSource.objects.filter(
                         source_id__in=list(select_sources.values_list('id', flat=True)))
 
-                    key_words = Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
+                    key_words = Keyword.objects.filter(network_id=7, taken=0, disabled=0,
                                                        id__in=list(key_source.values_list('keyword_id', flat=True)),
                                                        last_modified__gte=datetime.date(1999, 1, 1),
-                                                       ).order_by('last_modified')
+                                                       ).order_by('-last_modified')
                     key_words = list(key_words)
 
                 if len(key_words) < 10:
-                    key_words_non_s = Keyword.objects.filter(network_id=7, enabled=1, taken=0, disabled=0,
+                    key_words_non_s = Keyword.objects.filter(network_id=7, taken=0, disabled=0,
                                                        id__in=list(source_special.values_list('keyword_id', flat=True)),
                                                        last_modified__gte=datetime.date(1999, 1, 1),
-                                                       ).order_by('last_modified')
+                                                       ).order_by('-last_modified')
                     key_words.extend(list(key_words_non_s))
                 if len(key_words) == 0:
                     time.sleep(1 * 60)
