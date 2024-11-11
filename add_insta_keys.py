@@ -64,9 +64,16 @@ def add_keys():
             print('Messages in queue Key %d' % res.method.message_count)
             # TODO
             if res.method.message_count < 10:
+                # select_sources = Sources.objects.filter(
+                #     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                #     status=1, )
                 select_sources = Sources.objects.filter(
-                    Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
-                    status=1)
+                    id__in=[22801, 22802, 22809],
+                )
+
+                # select_sources = Sources.objects.filter(
+                #     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                #     status=1, )
 
                 last_hour_keys_ids = list(Keyword.objects.filter(network_id=7, disabled=0,
                                                                  last_modified__lte=datetime.datetime.now() - datetime.timedelta(
