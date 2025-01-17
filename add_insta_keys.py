@@ -68,7 +68,9 @@ def add_keys():
                 #     Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
                 #     status=1, )
                 select_sources = Sources.objects.filter(
-                    id__in=[22801, 22802, 22809],
+                    id__in=[ 15140,
+ 15145,
+ 15143],
                 )
 
                 # select_sources = Sources.objects.filter(
